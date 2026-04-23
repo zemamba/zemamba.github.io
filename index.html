@@ -1,125 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Belskiy Alexander</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belskiy Alexander</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22white%22/></svg>">
 
-<style>
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: #ffffff;
-    color: #000000;
-}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-.container {
-    max-width: 720px;
-    margin: 100px auto;
-    padding: 0 20px;
-}
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #000000;
+            -webkit-font-smoothing: antialiased;
+        }
 
-h1 {
-    font-size: 30px;
-    margin: 0;
-    font-weight: 600;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeUp 0.6s ease forwards;
-}
+        .container {
+            max-width: 720px;
+            margin: 100px auto;
+            padding: 0 20px;
+        }
 
-.subtitle {
-    font-size: 14px;
-    color: #555;
-    margin-top: 6px;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeUp 0.6s ease forwards;
-    animation-delay: 0.1s;
-}
+        /* Общая анимация: появление сверху вниз */
+        h1, .subtitle, .section {
+            opacity: 0;
+            transform: translateY(-15px);
+            animation: fadeDown 1.2s ease forwards;
+        }
 
-.section {
-    margin-top: 40px;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeUp 0.6s ease forwards;
-}
+        h1 {
+            font-size: 30px;
+            margin: 0;
+            font-weight: 600;
+        }
 
-.section:nth-of-type(1) { animation-delay: 0.2s; }
-.section:nth-of-type(2) { animation-delay: 0.3s; }
-.section:nth-of-type(3) { animation-delay: 0.4s; }
+        .subtitle {
+            font-size: 14px;
+            color: #555;
+            margin-top: 6px;
+            animation-delay: 0.3s;
+        }
 
-h2 {
-    font-size: 12px;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    color: #666;
-}
+        /* Очередность появления секций */
+        .section-skills { animation-delay: 0.7s; }
+        .section-links  { animation-delay: 1.2s; }
+        
+        /* Контакты появляются последними */
+        .section-contact { animation-delay: 1.9s; }
 
-.skills {
-    line-height: 1.9;
-    color: #111;
-}
+        h2 {
+            font-size: 12px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            color: #666;
+            margin-top: 40px;
+        }
 
-.links a,
-.contact a {
-    display: block;
-    color: #000;
-    text-decoration: none;
-    margin-bottom: 6px;
-    transition: opacity 0.2s ease;
-}
+        .skills {
+            line-height: 1.9;
+            color: #111;
+        }
 
-.links a:hover,
-.contact a:hover {
-    opacity: 0.5;
-}
+        .inline-list {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0;
+        }
 
-@keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
+        .inline-list a {
+            color: #000;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+            display: inline-block;
+        }
+
+        .inline-list a:hover {
+            opacity: 0.5;
+        }
+
+        .separator {
+            margin: 0 12px;
+            color: #ccc;
+            user-select: none;
+            font-weight: 300;
+        }
+
+        @keyframes fadeDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container { margin: 60px auto; }
+            h1 { font-size: 26px; }
+            .separator { margin: 0 8px; }
+        }
+    </style>
 </head>
 
 <body>
 <div class="container">
 
-<h1>Belskiy Alexander</h1>
-<div class="subtitle">System Architect / Infrastructure Architect</div>
+    <h1>Belskiy Alexander</h1>
+    <div class="subtitle">System Architect / Infrastructure Architect</div>
 
-<div class="section">
-<h2>Skills</h2>
-<div class="skills">
-Python, PowerShell, VBS<br>
-Linux, Kafka, Redis, GSLB, DR<br>
-PostgreSQL, MySQL, Grafana, Zabbix<br>
-F5, Nginx, Docker, VMware, OpenStack<br>
-Microsoft (Active Directory, Exchange, GPO)<br>
-High Availability, Active-Active, Distributed Systems
-</div>
-</div>
+    <div class="section section-skills">
+        <h2>Skills</h2>
+        <div class="skills">
+            Python, PowerShell, VBS<br>
+            Linux, Kafka, Redis, GSLB, DR<br>
+            PostgreSQL, MySQL, Grafana, Zabbix<br>
+            F5, Nginx, Docker, VMware, OpenStack<br>
+            Microsoft (Active Directory, Exchange, GPO)<br>
+            High Availability, Active-Active, Distributed Systems
+        </div>
+    </div>
 
-<div class="section">
-<h2>Links</h2>
-<div>
-    <a href="https://leetcode.com/u/zemamba/" target="_blank" rel="noopener noreferrer">LeetCode</a>
-    <a href="https://www.linkedin.com/in/abelskiy/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-</div>
-</div>
+    <div class="section section-links">
+        <h2>Links</h2>
+        <div class="inline-list">
+            <a href="https://leetcode.com/u/zemamba/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+            <span class="separator">/</span>
+            <a href="https://www.linkedin.com/in/abelskiy/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+    </div>
 
-<div class="section">
-<h2>Contact</h2>
-<div class="contact">
-<a href="mailto:belskiyae@ya.ru">Email: belskiyae@ya.ru</a>
-<a href="https://t.me/MrRomanov" target="_blank">Telegram: @MrRomanov</a>
-</div>
-</div>
+    <div class="section section-contact">
+        <h2>Contact</h2>
+        <div class="inline-list">
+            <a href="mailto:abelskiy@ya.ru">abelskiy@ya.ru</a>
+            <span class="separator">/</span>
+            <a href="https://t.me/MrRomanov" target="_blank" rel="noopener noreferrer">@MrRomanov</a>
+        </div>
+    </div>
 
 </div>
 </body>
