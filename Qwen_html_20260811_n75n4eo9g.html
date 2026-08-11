@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>СБП·Сканер — оплата по QR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Golos+Text:wght@400;500;600;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1220; --card:#131c2e; --accent:#35d07f; --accent-dk:#06281a;
+  --text:#eaf0f7; --dim:#8a97ab; --stroke:#24314a; --blue:#3b82f6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:"Golos Text",system-ui,sans-serif;color:var(--text);min-height:100vh;
+  background:
+    radial-gradient(700px 420px at 85% -8%, rgba(53,208,127,.14), transparent 60%),
+    radial-gradient(600px 400px at -10% 108%, rgba(59,130,246,.12), transparent 55%),
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,.022) 39px 40px),
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(255,255,255,.022) 39px 40px),
+    var(--bg);
+}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px 40px}
+
+/* шапка */
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 2px 14px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),#1fa86a);
+  display:grid;place-items:center;font:800 15px Unbounded;color:var(--accent-dk);box-shadow:0 6px 18px -6px rgba(53,208,127,.6)}
+.brand b{font:800 16px Unbounded;letter-spacing:.02em}
+.brand small{display:block;font:500 10.5px "JetBrains Mono";letter-spacing:.22em;color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--stroke);border-radius:999px;
+  padding:6px 12px;font:600 11.5px "JetBrains Mono";letter-spacing:.06em;color:var(--dim);background:rgba(19,28,46,.7)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:#5b6b83;flex:none}
+.chip.on{color:var(--accent);border-color:rgba(53,208,127,.4)}
+.chip.on .dot{background:var(--accent);animation:pulse 1.6s infinite}
+.chip.ok{color:#7ef0b0;border-color:rgba(53,208,127,.5)}
+.chip.ok .dot{background:#7ef0b0}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(53,208,127,.5)}70%{box-shadow:0 0 0 8px rgba(53,208,127,0)}100%{box-shadow:0 0 0 0 rgba(53,208,127,0)}}
+
+.banner{border:1px solid rgba(250,180,80,.4);background:rgba(250,180,80,.09);color:#ffd28a;
+  border-radius:12px;padding:11px 14px;font-size:13px;line-height:1.5;margin-bottom:14px}
+.banner.hidden{display:none}
+
+/* сканер */
+.scanner-card{background:var(--card);border:1px solid var(--stroke);border-radius:20px;overflow:hidden;
+  box-shadow:0 24px 50px -24px rgba(0,0,0,.7)}
+.view{position:relative;aspect-ratio:1/1;background:#050a13;overflow:hidden}
+.view video{width:100%;height:100%;object-fit:cover;display:block}
+.view.idle{display:grid;place-items:center}
+.idle-txt{color:var(--dim);font-size:13.5px;text-align:center;padding:24px;line-height:1.6}
+.frame{position:absolute;inset:10%;pointer-events:none}
+.frame::before{content:"";position:absolute;inset:0;border-radius:22px;background:rgba(53,208,127,.05)}
+.c{position:absolute;width:34px;height:34px;border:3px solid var(--accent);opacity:.9}
+.c.tl{top:0;left:0;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
+.c.tr{top:0;right:0;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.c.bl{bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 10px}
+.c.br{bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.scanning .c{animation:brk 2s ease-in-out infinite}
+@keyframes brk{0%,100%{opacity:.45}50%{opacity:1}}
+.scanline{position:absolute;left:12%;right:12%;height:3px;border-radius:3px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 16px var(--accent);
+  animation:scan 2.6s ease-in-out infinite}
+@keyframes scan{0%{top:12%;opacity:0}12%{opacity:1}50%{top:86%;opacity:1}62%{opacity:0}100%{top:12%;opacity:0}}
+.view-status{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 12px;text-align:center;
+  background:linear-gradient(transparent,rgba(5,10,19,.85));font:600 12.5px "JetBrains Mono";letter-spacing:.1em;color:#cfe9db}
+
+.controls{display:flex;gap:10px;padding:14px}
+.btn{flex:1;border:0;border-radius:13px;padding:14px 12px;font:700 14.5px "Golos Text";cursor:pointer;
+  transition:transform .15s, box-shadow .2s, filter .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(180deg,#4ce294,var(--accent));color:var(--accent-dk);
+  box-shadow:0 10px 26px -10px rgba(53,208,127,.7)}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent;border:1.5px solid var(--stroke);color:var(--text)}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+.manual{padding:0 14px 14px}
+.manual-row{display:flex;gap:8px}
+.manual input{flex:1;background:#0d1524;border:1.5px solid var(--stroke);border-radius:11px;color:var(--text);
+  padding:11px 13px;font:500 13.5px "JetBrains Mono";outline:none;min-width:0}
+.manual input:focus{border-color:var(--accent)}
+.manual .btn{flex:0 0 auto;padding:11px 16px}
+.manual p{margin-top:8px;font-size:11.5px;color:var(--dim)}
+
+/* результат */
+.card{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:18px;margin-top:16px;
+  animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+.card h2{font:800 17px Unbounded;margin-bottom:4px}
+.badge{display:inline-block;margin:10px 0 14px;border-radius:999px;padding:6px 13px;font:700 11.5px "JetBrains Mono";
+  letter-spacing:.06em;background:rgba(53,208,127,.12);border:1px solid rgba(53,208,127,.45);color:#7ef0b0}
+.badge.warn{background:rgba(250,180,80,.1);border-color:rgba(250,180,80,.4);color:#ffd28a}
+.rows{border-top:1px solid var(--stroke)}
+.row{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--stroke)}
+.row dt{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.row dd{font-weight:700;font-size:14.5px;word-break:break-word}
+.row dd.money{color:#7ef0b0;font-family:"JetBrains Mono"}
+.raw{margin-top:12px;background:#0d1524;border:1px solid var(--stroke);border-radius:12px;padding:11px 13px;
+  font:500 11.5px "JetBrains Mono";color:var(--dim);word-break:break-all;max-height:96px;overflow:auto}
+.raw-lbl{margin-top:14px;font:600 10.5px "JetBrains Mono";letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+
+.banks-title{margin:18px 0 10px;font-weight:800;font-size:15px}
+.banks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.bank{border:0;border-radius:13px;padding:13px 6px;font:800 13px "Golos Text";cursor:pointer;color:#fff;
+  transition:transform .15s, filter .2s;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bank small{font:500 9.5px "JetBrains Mono";letter-spacing:.08em;opacity:.75;text-transform:uppercase}
+.bank:hover{filter:brightness(1.1)}
+.bank:active{transform:scale(.96)}
+.bank.gpb{background:#0a4b8c}
+.bank.alfa{background:#d92b1f}
+.bank.tbank{background:#ffdd2d;color:#1c1c1c}.bank.tbank small{opacity:.6}
+.btn.sys{width:100%;margin-top:10px}
+.gost-note{margin-top:12px;font-size:13px;line-height:1.6;color:var(--dim);background:#0d1524;
+  border:1px dashed var(--stroke);border-radius:12px;padding:12px 14px}
+.actions{display:flex;gap:10px;margin-top:16px}
+
+/* история */
+.hist{margin-top:22px}
+.hist-head{display:flex;align-items:center;gap:10px;font:600 10.5px "JetBrains Mono";letter-spacing:.24em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.badge-count{background:rgba(53,208,127,.14);color:var(--accent);border-radius:999px;padding:2px 10px}
+#hist{list-style:none}
+#hist li{display:grid;grid-template-columns:12px 1fr auto auto;gap:11px;align-items:center;
+  padding:9px 2px;border-bottom:1px dashed var(--stroke);font-size:13px;animation:rise .3s both}
+#hist .hdot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+#hist .hname{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+#hist .htype{font:500 10.5px "JetBrains Mono";color:var(--dim)}
+#hist .htime{font:500 11px "JetBrains Mono";color:var(--dim)}
+.empty-hist{color:var(--dim);font-size:13px;padding:6px 2px}
+
+details.note{margin-top:22px;border-left:3px solid var(--accent);background:rgba(53,208,127,.06);
+  border-radius:0 12px 12px 0;padding:12px 15px}
+details.note summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13.5px}
+details.note p{margin-top:9px;font-size:12.5px;line-height:1.65;color:var(--dim)}
+footer{margin-top:24px;text-align:center;font:500 10.5px "JetBrains Mono";letter-spacing:.08em;color:rgba(138,151,171,.55);line-height:1.8}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,18px);opacity:0;z-index:9;
+  background:var(--text);color:#0b1220;font:700 12.5px "JetBrains Mono";padding:11px 18px;border-radius:11px;
+  box-shadow:0 12px 30px rgba(0,0,0,.5);transition:.3s;pointer-events:none;max-width:88vw;text-align:center}
+.toast.show{transform:translate(-50%,0);opacity:1}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo">QR</div>
+      <div><b>СБП·Сканер</b><small>ОПЛАТА ПО QR-КОДУ</small></div>
+    </div>
+    <span class="chip" id="status"><span class="dot"></span><span id="statusTxt">камера выключена</span></span>
+  </header>
+
+  <div class="banner hidden" id="httpsWarn">
+    ⚠️ Камера доступна только по HTTPS или с localhost. Откройте страницу через GitHub Pages / Netlify
+    или локальный сервер, затем обновите страницу.
+  </div>
+
+  <!-- СКАНЕР -->
+  <section class="scanner-card">
+    <div class="view idle" id="view">
+      <video id="video" playsinline muted></video>
+      <div class="idle-txt" id="idleTxt">Нажмите «Включить камеру»<br>и наведите её на QR-код СБП</div>
+      <div class="frame" id="frame" style="display:none">
+        <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+        <div class="scanline" id="scanline" style="display:none"></div>
+      </div>
+      <div class="view-status" id="viewStatus" style="display:none">ИЩУ QR-КОД…</div>
+    </div>
+    <div class="controls">
+      <button class="btn primary" id="btnStart">📷 Включить камеру</button>
+      <button class="btn ghost" id="btnTorch" style="flex:0 0 auto;display:none">⚡</button>
+    </div>
+    <div class="manual">
+      <div class="manual-row">
+        <input id="pasteInput" type="text" placeholder="…или вставьте содержимое QR сюда">
+        <button class="btn ghost" id="btnParse">Разобрать</button>
+      </div>
+      <p>Поддерживаются: qr.nspk.ru (СБП) и реквизиты ГОСТ Р 56042 (ST0001…)</p>
+    </div>
+  </section>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <section id="result" style="display:none">
+    <div class="card">
+      <h2>Данные сканирования</h2>
+      <span class="badge" id="rBadge"></span>
+      <dl class="rows" id="rRows"></dl>
+      <div class="raw-lbl">Исходные данные</div>
+      <div class="raw" id="rRaw"></div>
+
+      <div id="bankBlock">
+        <p class="banks-title">Передать для оплаты в банк:</p>
+        <div class="banks">
+          <button class="bank gpb"   data-bank="gpb">ГПБ<small>Газпромбанк</small></button>
+          <button class="bank alfa"  data-bank="alfa">Альфа<small>Альфа-Банк</small></button>
+          <button class="bank tbank" data-bank="tbank">Т-Банк<small>T-Bank</small></button>
+        </div>
+        <button class="btn ghost sys" id="btnSys">🤝 Системный выбор приложения</button>
+      </div>
+      <div class="gost-note" id="gostNote" style="display:none"></div>
+
+      <div class="actions">
+        <button class="btn ghost" id="btnCopy">⧉ Копировать</button>
+        <button class="btn ghost" id="btnRescan">↺ Сканировать ещё</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ИСТОРИЯ -->
+  <section class="hist">
+    <div class="hist-head">История сканирований <span class="badge-count" id="histCount">0</span></div>
+    <ul id="hist"><li class="empty-hist" style="grid-template-columns:1fr">Пока пусто</li></ul>
+  </section>
+
+  <details class="note">
+    <summary>Как это работает?</summary>
+    <p>Страница распознаёт QR камерой и показывает содержимое. Для QR СБП (qr.nspk.ru) платёжная ссылка
+       передаётся в выбранное банковское приложение: банк сам запрашивает её у НСПК и показывает получателя
+       и сумму — оплата подтверждается только внутри банка. На Android передача идёт через intent-ссылку
+       прямо в выбранный банк; в других браузерах откроется системный выбор приложений.
+       Для реквизитов ГОСТ банки не принимают данные извне — используйте копирование.
+       Всё работает локально: камера и данные никуда не отправляются.</p>
+  </details>
+
+  <footer>РЕКВИЗИТЫ ПЕРЕДАЮТСЯ ТОЛЬКО В ВЫБРАННОЕ БАНКОВСКОЕ ПРИЛОЖЕНИЕ<br>
+         QR СБП ВЫПУСКАЕТ НСПК · ПОДТВЕРЖДЕНИЕ ОПЛАТЫ — ВСЕГДА В БАНКЕ</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+
+/* ---------- банки ---------- */
+const BANKS = {
+  gpb:  { name:'Газпромбанк', pkg:'ru.gazprombank.android' },
+  alfa: { name:'Альфа-Банк',  pkg:'ru.alfabank' },
+  tbank:{ name:'Т-Банк',      pkg:'com.idamob.tinkoff.android' }
+};
+
+/* ---------- разбор QR ---------- */
+const GOST_LABELS = [
+  ['Name','Получатель'], ['PayeeInn','ИНН получателя'], ['Inn','ИНН получателя'], ['KPP','КПП'],
+  ['PersonalAcc','Счёт получателя'], ['BankName','Банк получателя'], ['BIC','БИК'],
+  ['CorrespAcc','Корр. счёт'], ['Purpose','Назначение платежа']
+];
+
+function parseQr(raw){
+  const t = raw.trim();
+  if(/^https:\/\/qr\.nspk\.ru\//i.test(t)){
+    const token = t.replace(/\/+$/,'').split('/').pop();
+    return { type:'nspk', label:'СБП · платёжная ссылка НСПК', url:t,
+      rows:[['Тип','QR-код СБП (qr.nspk.ru)'],['Токен платежа',token]] };
+  }
+  if(t.toUpperCase().startsWith('ST0001')){
+    const fields = {};
+    t.split('|').forEach(p=>{ const i=p.indexOf('='); if(i>0) fields[p.slice(0,i).trim()]=p.slice(i+1).trim(); });
+    const rows = [];
+    GOST_LABELS.forEach(([k,l])=>{ if(fields[k]) rows.push([l,fields[k]]); });
+    const kop = parseInt(fields['Sum']||'',10);
+    if(!isNaN(kop)) rows.push(['Сумма',(kop/100).toLocaleString('ru-RU',{minimumFractionDigits:2})+' ₽','money']);
+    return { type:'gost', label:'Реквизиты · ГОСТ Р 56042', url:null, rows };
+  }
+  if(/^https?:\/\//i.test(t))
+    return { type:'web', label:'Веб-ссылка', url:t, rows:[['URL',t]] };
+  return { type:'text', label:'Текст / неизвестный формат', url:null, rows:[['Содержимое',t]] };
+}
+
+/* ---------- состояние камеры ---------- */
+let stream=null, scanTimer=null, detector=null, busy=false, torchOn=false;
+const video=$('#video');
+const offCanvas=document.createElement('canvas');
+const offCtx=offCanvas.getContext('2d',{willReadFrequently:true});
+
+if('BarcodeDetector' in window){
+  try{ detector=new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
+}
+if(!detector && typeof jsQR==='undefined'){
+  $('#idleTxt').innerHTML='Браузер не поддерживает сканирование,<br>а библиотека jsQR не загрузилась.<br>Проверьте интернет и обновите страницу.';
+}
+
+function setStatus(mode,text){
+  const chip=$('#status');
+  chip.classList.remove('on','ok');
+  if(mode==='on') chip.classList.add('on');
+  if(mode==='ok') chip.classList.add('ok');
+  $('#statusTxt').textContent=text;
+}
+
+async function startCamera(){
+  if(location.protocol==='http:' && !['localhost','127.0.0.1'].includes(location.hostname)){
+    $('#httpsWarn').classList.remove('hidden');
+  }
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+  }catch(err){
+    toast('Не удалось включить камеру: '+err.name);
+    return;
+  }
+  video.srcObject=stream;
+  await video.play();
+  $('#view').classList.remove('idle');
+  $('#view').classList.add('scanning');
+  $('#idleTxt').style.display='none';
+  $('#frame').style.display='block';
+  $('#scanline').style.display='block';
+  $('#viewStatus').style.display='block';
+  $('#btnStart').textContent='⏹ Остановить';
+  setStatus('on','ищу QR-код…');
+  setupTorch();
+  scanTimer=setInterval(scanFrame,130);
+}
+
+function stopCamera(){
+  clearInterval(scanTimer); scanTimer=null;
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  video.srcObject=null;
+  $('#view').classList.remove('scanning');
+  $('#scanline').style.display='none';
+  $('#btnStart').textContent='📷 Включить камеру';
+  $('#btnTorch').style.display='none';
+}
+
+function setupTorch(){
+  const track=stream.getVideoTracks()[0];
+  const caps=track.getCapabilities ? track.getCapabilities() : {};
+  if(caps.torch){
+    $('#btnTorch').style.display='block';
+    torchOn=false;
+    $('#btnTorch').onclick=async()=>{
+      torchOn=!torchOn;
+      try{ await track.applyConstraints({advanced:[{torch:torchOn}]}); }catch(e){}
+      $('#btnTorch').style.borderColor = torchOn?'var(--accent)':'var(--stroke)';
+    };
+  }
+}
+
+async function scanFrame(){
+  if(busy || video.readyState<2 || !video.videoWidth) return;
+  busy=true;
+  try{
+    const scale=Math.min(1,640/video.videoWidth);
+    offCanvas.width=Math.floor(video.videoWidth*scale);
+    offCanvas.height=Math.floor(video.videoHeight*scale);
+    offCtx.drawImage(video,0,0,offCanvas.width,offCanvas.height);
+    let text=null;
+    if(detector){
+      const codes=await detector.detect(offCanvas);
+      text=codes.length?codes[0].rawValue:null;
+    }else if(typeof jsQR!=='undefined'){
+      const img=offCtx.getImageData(0,0,offCanvas.width,offCanvas.height);
+      const res=jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
+      text=res?res.data:null;
+    }
+    if(text) onDetected(text);
+  }catch(e){/* кадр не готов */}
+  finally{ busy=false; }
+}
+
+/* ---------- обработка результата ---------- */
+let current=null, histCount=0;
+
+function onDetected(raw){
+  clearInterval(scanTimer); scanTimer=null;
+  video.pause();                                  // стоп-кадр
+  navigator.vibrate && navigator.vibrate(80);
+  beep();
+  const p=parseQr(raw);
+  current=p;
+  showResult(p,raw);
+  pushHistory(p);
+  setStatus('ok','QR найден ✓');
+  $('#viewStatus').textContent='QR-КОД РАСПОЗНАН ✓';
+}
+
+function showResult(p,raw){
+  $('#rBadge').textContent=p.label;
+  $('#rBadge').classList.toggle('warn', p.type!=='nspk');
+  const rows=$('#rRows'); rows.innerHTML='';
+  p.rows.forEach(([l,v,cls])=>{
+    const r=document.createElement('div'); r.className='row';
+    const dt=document.createElement('dt'); dt.textContent=l;
+    const dd=document.createElement('dd'); dd.textContent=v; if(cls) dd.className=cls;
+    r.append(dt,dd); rows.appendChild(r);
+  });
+  $('#rRaw').textContent=raw;
+  $('#rRaw').onclick=()=>copyText(raw);
+  const hasUrl=!!p.url;
+  $('#bankBlock').style.display=hasUrl?'block':'none';
+  const g=$('#gostNote');
+  if(hasUrl){ g.style.display='none'; }
+  else{
+    g.style.display='block';
+    g.innerHTML = p.type==='gost'
+      ? 'Это реквизиты по ГОСТ Р 56042 — банковские приложения не принимают их извне. Скопируйте данные и используйте в приложении банка вручную.'
+      : 'В QR нет платёжной ссылки — оплатить его через банк нельзя.';
+  }
+  $('#result').style.display='block';
+  $('#result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function pushHistory(p){
+  const ul=$('#hist');
+  const empty=ul.querySelector('.empty-hist'); if(empty) empty.remove();
+  const li=document.createElement('li');
+  const d=document.createElement('span'); d.className='hdot';
+  const n=document.createElement('span'); n.className='hname';
+  n.textContent = p.rows.find(r=>r[0]==='Получатель')?.[1] || (p.type==='nspk'?'СБП · '+p.url.split('/').pop() : p.rows[0][1]);
+  const t=document.createElement('span'); t.className='htype';
+  t.textContent = {nspk:'СБП',gost:'ГОСТ',web:'ссылка',text:'текст'}[p.type];
+  const tm=document.createElement('span'); tm.className='htime';
+  tm.textContent=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+  li.append(d,n,t,tm); ul.prepend(li);
+  while(ul.children.length>6) ul.lastChild.remove();
+  $('#histCount').textContent=++histCount;
+}
+
+/* ---------- передача в банк ---------- */
+const isAndroidChrome=/Android/i.test(navigator.userAgent) && /Chrome\//.test(navigator.userAgent) && !/SamsungBrowser/i.test(navigator.userAgent);
+
+function intentUrl(pkg,httpsUrl){
+  const path=httpsUrl.replace(/^https:\/\//i,'');
+  return 'intent://'+path+'#Intent;scheme=https;package='+pkg+
+         ';S.browser_fallback_url='+encodeURIComponent(httpsUrl)+';end';
+}
+
+function openInBank(pkg,url){
+  if(isAndroidChrome){ location.href=intentUrl(pkg,url); }
+  else{ window.open(url,'_blank'); toast('Выберите банковское приложение в системном окне'); }
+}
+
+document.querySelectorAll('.bank').forEach(btn=>{
+  btn.onclick=()=>{
+    if(!current?.url) return;
+    const b=BANKS[btn.dataset.bank];
+    openInBank(b.pkg,current.url);
+    toast('Передаю в '+b.name+'…');
+  };
+});
+
+$('#btnSys').onclick=()=>{
+  if(!current?.url) return;
+  window.open(current.url,'_blank');
+  toast('Выберите приложение банка в системе');
+};
+
+/* ---------- утилиты ---------- */
+function copyText(t){
+  const done=()=>toast('Скопировано');
+  if(navigator.clipboard?.writeText){ navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t,done)); }
+  else fallbackCopy(t,done);
+}
+function fallbackCopy(t,done){
+  const ta=document.createElement('textarea'); ta.value=t;
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){}
+  ta.remove();
+}
+let toastT;
+function toast(msg){
+  const el=$('#toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2400);
+}
+let audio=null;
+function beep(){
+  try{
+    audio=audio||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audio.createOscillator(), g=audio.createGain();
+    o.frequency.value=1100; g.gain.setValueAtTime(.06,audio.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.14);
+    o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime+.15);
+  }catch(e){}
+}
+
+/* ---------- кнопки ---------- */
+$('#btnStart').onclick=()=>{
+  if(stream){ stopCamera(); setStatus('','камера выключена'); $('#viewStatus').style.display='none';
+              $('#frame').style.display='none'; $('#view').classList.add('idle'); $('#idleTxt').style.display='block'; }
+  else startCamera();
+};
+$('#btnParse').onclick=()=>{
+  const v=$('#pasteInput').value.trim();
+  if(!v){ toast('Вставьте содержимое QR-кода'); return; }
+  stopCamera();
+  $('#view').classList.add('idle'); $('#idleTxt').style.display='block'; $('#idleTxt').textContent='Данные введены вручную';
+  $('#frame').style.display='none'; $('#viewStatus').style.display='none';
+  onDetected(v);
+};
+$('#btnCopy').onclick=()=>current&&copyText($('#rRaw').textContent);
+$('#btnRescan').onclick=()=>{
+  $('#result').style.display='none';
+  if(video.srcObject){ video.play(); scanTimer=setInterval(scanFrame,130);
+    $('#viewStatus').textContent='ИЩУ QR-КОД…'; $('#viewStatus').style.display='block';
+    setStatus('on','ищу QR-код…'); }
+  else startCamera();
+};
+</script>
+</body>
+</html>
