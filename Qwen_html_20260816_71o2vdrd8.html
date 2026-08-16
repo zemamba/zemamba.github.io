@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>СБП·Сканер</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0b1220; --card:#131c2e; --accent:#35d07f; --accent-dk:#06281a;
+  --text:#eaf0f7; --dim:#8a97ab; --stroke:#24314a;
+}
+body{
+  font-family:system-ui,-apple-system,sans-serif;color:var(--text);min-height:100vh;
+  background:var(--bg); padding:16px 16px 40px;
+}
+.wrap{max-width:420px;margin:0 auto}
+h1{font-size:17px;font-weight:800;margin-bottom:14px}
+h1 b{color:var(--accent)}
+
+/* видоискатель */
+.view{
+  position:relative; width:100%; aspect-ratio:1/1; background:#050a13;
+  border-radius:16px; overflow:hidden; margin-bottom:12px;
+}
+.view video{width:100%;height:100%;object-fit:cover;display:block}
+.view.idle{display:flex;align-items:center;justify-content:center}
+.idle-txt{color:var(--dim);font-size:13px;text-align:center;padding:20px;line-height:1.5}
+.frame{position:absolute;inset:14%;pointer-events:none}
+.c{position:absolute;width:26px;height:26px;border:3px solid var(--accent);border-radius:4px}
+.c.tl{top:0;left:0;border-right:0;border-bottom:0;border-top-left-radius:10px}
+.c.tr{top:0;right:0;border-left:0;border-bottom:0;border-top-right-radius:10px}
+.c.bl{bottom:0;left:0;border-right:0;border-top:0;border-bottom-left-radius:10px}
+.c.br{bottom:0;right:0;border-left:0;border-top:0;border-bottom-right-radius:10px}
+.scanline{
+  position:absolute;left:16%;right:16%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  box-shadow:0 0 12px var(--accent);
+  animation:scan 2.4s ease-in-out infinite;
+}
+@keyframes scan{
+  0%{top:16%;opacity:0} 15%{opacity:1} 50%{top:82%;opacity:1}
+  65%{opacity:0} 100%{top:16%;opacity:0}
+}
+
+/* кнопки */
+.btn{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; border:0; border-radius:12px; padding:14px;
+  font-size:15px; font-weight:700; cursor:pointer;
+  font-family:inherit; color:var(--text);
+}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--accent);color:var(--accent-dk)}
+.btn.ghost{background:transparent;border:1.5px solid var(--stroke)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+.row{display:flex;gap:8px}
+.row .btn{flex:1}
+
+/* результат */
+.card{
+  background:var(--card); border:1px solid var(--stroke);
+  border-radius:14px; padding:14px; margin-top:14px;
+}
+.card.hidden{display:none}
+
+.lbl{font-size:11px;color:var(--dim);font-weight:600;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:6px}
+
+.amt{
+  display:flex;align-items:center;gap:8px;
+  background:#0d1524;border:1.5px solid var(--stroke);
+  border-radius:10px;padding:12px;margin-bottom:12px;
+}
+.amt input{
+  flex:1;background:transparent;border:0;color:#7ef0b0;
+  font:700 20px ui-monospace,Menlo,monospace;outline:none;
+  text-align:right;width:100%;
+}
+.amt input::placeholder{color:#3d4a5e}
+
+.info{font-size:13px;padding:8px 0;border-bottom:1px solid var(--stroke)}
+.info:last-of-type{border:0}
+.info span{color:var(--dim);display:block;font-size:11px;margin-bottom:2px}
+.info b{font-weight:600;word-break:break-word}
+
+.raw{
+  margin-top:10px;padding:8px;background:#0d1524;border-radius:8px;
+  font:10.5px ui-monospace,Menlo,monospace;color:var(--dim);
+  word-break:break-all;max-height:64px;overflow:auto;
+}
+
+.banks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:12px 0}
+.bank{
+  border:1.5px solid var(--stroke);border-radius:10px;padding:10px 4px;
+  background:transparent;color:var(--text);cursor:pointer;
+  font:600 12px/1.2 system-ui;text-align:center;
+  font-family:inherit;
+}
+.bank small{display:block;font-size:9px;color:var(--dim);margin-top:2px;
+  text-transform:uppercase;letter-spacing:.04em;font-weight:500}
+.bank.sel{border-color:var(--accent);background:rgba(53,208,127,.08);color:var(--accent)}
+
+.note{
+  margin-top:10px;padding:10px;background:rgba(250,180,80,.08);
+  border:1px dashed rgba(250,180,80,.4);border-radius:8px;
+  font-size:12px;color:#ffd28a;line-height:1.5;
+}
+
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;
+  background:var(--text);color:#0b1220;font-weight:600;font-size:12px;
+  padding:10px 18px;border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);transition:.25s;pointer-events:none;z-index:9;
+  max-width:88vw;text-align:center;
+}
+.toast.show{transform:translate(-50%,0);opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>СБП<b>·</b>Сканер</h1>
+
+  <!-- ВИДОИСКАТЕЛЬ -->
+  <div class="view idle" id="view">
+    <video id="video" playsinline muted></video>
+    <div class="idle-txt" id="idleTxt">Наведите камеру на QR-код</div>
+    <div class="frame" id="frame" style="display:none">
+      <span class="c tl"></span><span class="c tr"></span>
+      <span class="c bl"></span><span class="c br"></span>
+      <div class="scanline" id="scanline" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- УПРАВЛЕНИЕ -->
+  <div class="row">
+    <button class="btn primary" id="btnScan">📷 Сканировать</button>
+    <button class="btn ghost" id="btnParse" style="flex:0 0 42%">Распарсить</button>
+  </div>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <div class="card hidden" id="result">
+    <div class="lbl">Сумма платежа</div>
+    <div class="amt">
+      <input id="amountInput" type="text" placeholder="0.00" inputmode="decimal">
+    </div>
+
+    <div class="lbl">Данные</div>
+    <div id="infoRows"></div>
+
+    <div class="raw" id="rawData"></div>
+
+    <div class="lbl" style="margin-top:12px">Банк для оплаты</div>
+    <div class="banks" id="banks">
+      <button class="bank" data-bank="ypay">Яндекс Pay<small>YPay</small></button>
+      <button class="bank" data-bank="tbank">Т-Банк<small>T-Bank</small></button>
+      <button class="bank" data-bank="ozon">Озон Банк<small>Ozon</small></button>
+    </div>
+
+    <button class="btn primary" id="btnPay">💳 Оплатить</button>
+
+    <div class="row" style="margin-top:8px">
+      <button class="btn ghost" id="btnOpen">↗ Перейти</button>
+      <button class="btn ghost" id="btnCopy">⧉ Копировать</button>
+      <button class="btn ghost" id="btnRescan">↺ Ещё</button>
+    </div>
+
+    <div class="note" id="note" style="display:none"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+
+const BANKS = {
+  ypay: { name:'Яндекс Pay', pkg:'ru.yandex.yandexpay' },
+  tbank:{ name:'Т-Банк',     pkg:'com.idamob.tinkoff.android' },
+  ozon: { name:'Озон Банк',  pkg:'ru.ozon.app' }
+};
+
+let stream=null, scanTimer=null, detector=null, busy=false, current=null;
+const video=$('#video');
+const offCanvas=document.createElement('canvas');
+const offCtx=offCanvas.getContext('2d',{willReadFrequently:true});
+
+if('BarcodeDetector' in window){
+  try{ detector=new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
+}
+
+/* разбор QR */
+function parseQr(raw){
+  const t = raw.trim();
+  if(/^https:\/\/qr\.nspk\.ru\//i.test(t)){
+    const token = t.replace(/\/+$/,'').split('/').pop();
+    return { type:'nspk', url:t,
+      info:[['Тип','QR СБП'],['Токен',token]], raw };
+  }
+  if(t.toUpperCase().startsWith('ST0001')){
+    const f = {};
+    t.split('|').forEach(p=>{
+      const i=p.indexOf('='); if(i>0) f[p.slice(0,i).trim()]=p.slice(i+1).trim();
+    });
+    const info=[];
+    [['Name','Получатель'],['PayeeInn','ИНН'],['PersonalAcc','Счёт'],
+     ['BankName','Банк'],['BIC','БИК'],['Purpose','Назначение']]
+     .forEach(([k,l])=>{ if(f[k]) info.push([l,f[k]]); });
+    return { type:'gost', url:null, info, raw, sumKop:parseInt(f['Sum'],10)||0 };
+  }
+  if(/^https?:\/\//i.test(t))
+    return { type:'web', url:t, info:[['Ссылка',t]], raw };
+  return { type:'text', url:null, info:[['Содержимое',t]], raw };
+}
+
+/* камера */
+async function startCamera(){
+  if(location.protocol==='http:' && !['localhost','127.0.0.1'].includes(location.hostname)){
+    toast('Камера работает только по HTTPS');
+    return;
+  }
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+  }catch(err){
+    toast('Ошибка камеры');
+    return;
+  }
+  video.srcObject=stream;
+  await video.play();
+  $('#view').classList.remove('idle');
+  $('#idleTxt').style.display='none';
+  $('#frame').style.display='block';
+  $('#scanline').style.display='block';
+  $('#btnScan').textContent='⏹ Стоп';
+  scanTimer=setInterval(scanFrame,130);
+}
+
+function stopCamera(){
+  clearInterval(scanTimer); scanTimer=null;
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  video.srcObject=null;
+  $('#scanline').style.display='none';
+  $('#btnScan').textContent='📷 Сканировать';
+}
+
+async function scanFrame(){
+  if(busy || video.readyState<2 || !video.videoWidth) return;
+  busy=true;
+  try{
+    const scale=Math.min(1,640/video.videoWidth);
+    offCanvas.width=Math.floor(video.videoWidth*scale);
+    offCanvas.height=Math.floor(video.videoHeight*scale);
+    offCtx.drawImage(video,0,0,offCanvas.width,offCanvas.height);
+    let text=null;
+    if(detector){
+      const codes=await detector.detect(offCanvas);
+      text=codes.length?codes[0].rawValue:null;
+    }else if(typeof jsQR!=='undefined'){
+      const img=offCtx.getImageData(0,0,offCanvas.width,offCanvas.height);
+      const res=jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
+      text=res?res.data:null;
+    }
+    if(text) onDetected(text);
+  }catch(e){}
+  finally{ busy=false; }
+}
+
+/* результат */
+function onDetected(raw){
+  stopCamera();
+  video.pause();
+  navigator.vibrate && navigator.vibrate(80);
+  beep();
+  current = parseQr(raw);
+  showResult();
+  $('#view').classList.add('idle');
+  $('#idleTxt').style.display='block';
+  $('#idleTxt').textContent='QR распознан ✓';
+  $('#frame').style.display='none';
+}
+
+function showResult(){
+  const p=current;
+  const rows=$('#infoRows'); rows.innerHTML='';
+  p.info.forEach(([l,v])=>{
+    const d=document.createElement('div'); d.className='info';
+    d.innerHTML=`<span>${l}</span><b>${v}</b>`;
+    rows.appendChild(d);
+  });
+  $('#rawData').textContent=p.raw;
+
+  const amt=$('#amountInput');
+  if(p.type==='gost' && p.sumKop){
+    amt.value=(p.sumKop/100).toFixed(2)+' ₽';
+  }else{
+    amt.value=''; amt.placeholder='0.00';
+  }
+
+  const note=$('#note');
+  if(p.type==='gost'){
+    note.style.display='block';
+    note.textContent='Реквизиты ГОСТ. Скопируйте данные и вставьте в банк вручную.';
+  }else if(p.type!=='nspk'){
+    note.style.display='block';
+    note.textContent='Это не платёжный QR СБП.';
+  }else{
+    note.style.display='none';
+  }
+
+  // сброс выбора банка
+  document.querySelectorAll('.bank').forEach(b=>b.classList.remove('sel'));
+
+  $('#result').classList.remove('hidden');
+  $('#result').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* банки */
+const isAndroidChrome=/Android/i.test(navigator.userAgent) && /Chrome\//.test(navigator.userAgent) && !/SamsungBrowser/i.test(navigator.userAgent);
+
+function intentUrl(pkg,url){
+  const path=url.replace(/^https:\/\//i,'');
+  return 'intent://'+path+'#Intent;scheme=https;package='+pkg+
+         ';S.browser_fallback_url='+encodeURIComponent(url)+';end';
+}
+
+document.querySelectorAll('.bank').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.bank').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+  };
+});
+
+$('#btnPay').onclick=()=>{
+  if(!current?.url){ toast('Нет платёжной ссылки'); return; }
+  const sel=document.querySelector('.bank.sel');
+  if(sel && isAndroidChrome){
+    location.href=intentUrl(BANKS[sel.dataset.bank].pkg,current.url);
+    toast('Открываю '+BANKS[sel.dataset.bank].name+'…');
+  }else{
+    window.open(current.url,'_blank');
+    toast(sel?'Выберите приложение в системном окне':'Открываю ссылку');
+  }
+};
+
+$('#btnOpen').onclick=()=>{
+  if(!current?.url){ toast('Нет ссылки'); return; }
+  window.open(current.url,'_blank');
+};
+
+$('#btnCopy').onclick=()=>{
+  if(!current) return;
+  copyText(current.raw);
+};
+
+$('#btnRescan').onclick=()=>{
+  $('#result').classList.add('hidden');
+  startCamera();
+};
+
+$('#btnScan').onclick=()=>{
+  if(stream) stopCamera();
+  else startCamera();
+};
+
+$('#btnParse').onclick=async()=>{
+  let text='';
+  if(navigator.clipboard?.readText){
+    try{ text=await navigator.clipboard.readText(); }catch(e){}
+  }
+  if(!text){
+    text=prompt('Вставьте содержимое QR или ссылку:','') || '';
+  }
+  text=text.trim();
+  if(!text){ toast('Нечего парсить'); return; }
+  stopCamera();
+  $('#view').classList.add('idle');
+  $('#idleTxt').style.display='block';
+  $('#idleTxt').textContent='Данные введены вручную';
+  $('#frame').style.display='none';
+  onDetected(text);
+};
+
+/* форматирование суммы */
+$('#amountInput').addEventListener('input',e=>{
+  let v=e.target.value.replace(/[^\d.,]/g,'').replace(',','.');
+  if(!v){ e.target.value=''; return; }
+  const parts=v.split('.');
+  if(parts[1] && parts[1].length>2) parts[1]=parts[1].slice(0,2);
+  e.target.value=parts.join('.')+' ₽';
+});
+
+/* утилиты */
+function copyText(t){
+  const done=()=>toast('Скопировано');
+  if(navigator.clipboard?.writeText){
+    navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t,done));
+  }else fallbackCopy(t,done);
+}
+function fallbackCopy(t,done){
+  const ta=document.createElement('textarea'); ta.value=t;
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){}
+  ta.remove();
+}
+let toastT;
+function toast(msg){
+  const el=$('#toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200);
+}
+let audio=null;
+function beep(){
+  try{
+    audio=audio||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audio.createOscillator(), g=audio.createGain();
+    o.frequency.value=1100; g.gain.setValueAtTime(.06,audio.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.14);
+    o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime+.15);
+  }catch(e){}
+}
+</script>
+</body>
+</html>
