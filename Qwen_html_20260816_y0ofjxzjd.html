@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>СБП·Сканер</title>
+<style>
+:root{
+  --bg:#0b1220; --card:#131c2e; --accent:#35d07f; --accent-dk:#06281a;
+  --text:#eaf0f7; --dim:#8a97ab; --stroke:#24314a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:system-ui,-apple-system,sans-serif;color:var(--text);min-height:100vh;
+  background:
+    radial-gradient(700px 420px at 85% -8%, rgba(53,208,127,.14), transparent 60%),
+    var(--bg);
+  padding:16px;
+}
+.wrap{max-width:480px;margin:0 auto}
+h1{font-size:18px;font-weight:800;margin-bottom:16px;letter-spacing:.02em}
+h1 span{color:var(--accent)}
+
+.card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px;margin-bottom:14px}
+
+/* сканер */
+.view{position:relative;aspect-ratio:1/1;background:#050a13;border-radius:14px;overflow:hidden;margin-bottom:12px}
+.view video{width:100%;height:100%;object-fit:cover;display:block}
+.view.idle{display:grid;place-items:center}
+.idle-txt{color:var(--dim);font-size:13px;text-align:center;padding:20px}
+.frame{position:absolute;inset:12%;pointer-events:none}
+.c{position:absolute;width:30px;height:30px;border:3px solid var(--accent)}
+.c.tl{top:0;left:0;border-right:0;border-bottom:0}
+.c.tr{top:0;right:0;border-left:0;border-bottom:0}
+.c.bl{bottom:0;left:0;border-right:0;border-top:0}
+.c.br{bottom:0;right:0;border-left:0;border-top:0}
+.scanline{position:absolute;left:14%;right:14%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  box-shadow:0 0 12px var(--accent);animation:scan 2.4s ease-in-out infinite}
+@keyframes scan{0%{top:14%;opacity:0}15%{opacity:1}50%{top:84%;opacity:1}65%{opacity:0}100%{top:14%;opacity:0}}
+.status-bar{font-size:12px;color:var(--dim);text-align:center;margin-top:8px}
+
+/* кнопки */
+.btn{width:100%;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;
+  transition:transform .12s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);color:var(--accent-dk)}
+.btn.ghost{background:transparent;border:1.5px solid var(--stroke);color:var(--text)}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn-row{display:flex;gap:8px;margin-top:8px}
+.btn-row .btn{flex:1}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+/* ручная ссылка */
+.manual{display:flex;gap:8px;margin-bottom:12px}
+.manual input{flex:1;background:#0d1524;border:1.5px solid var(--stroke);border-radius:10px;color:var(--text);
+  padding:12px;font-size:13px;outline:none;min-width:0}
+.manual input:focus{border-color:var(--accent)}
+.manual .btn{flex:0 0 auto;padding:12px 16px}
+
+/* результат */
+.result{display:none}
+.amount-row{display:flex;align-items:center;gap:10px;padding:14px;background:#0d1524;
+  border:1.5px solid var(--stroke);border-radius:12px;margin-bottom:12px}
+.amount-row label{font-size:13px;color:var(--dim);font-weight:600}
+.amount-row input{flex:1;background:transparent;border:0;color:#7ef0b0;font:700 20px "JetBrains Mono",monospace;
+  outline:none;min-width:0;text-align:right}
+.amount-row input::placeholder{color:#3d4a5e}
+.amount-row input:focus{color:#9effc3}
+
+.info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--stroke);font-size:13px}
+.info-row:last-child{border:0}
+.info-row span:first-child{color:var(--dim)}
+.info-row span:last-child{font-weight:600;text-align:right;max-width:60%;word-break:break-word}
+.info-row .money{color:#7ef0b0;font-family:"JetBrains Mono",monospace}
+
+.raw{margin-top:12px;padding:10px;background:#0d1524;border-radius:8px;
+  font:11px "JetBrains Mono",monospace;color:var(--dim);word-break:break-all;max-height:72px;overflow:auto}
+
+.bank-select{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+.bank{border:1.5px solid var(--stroke);border-radius:10px;padding:12px 6px;background:transparent;color:var(--text);
+  cursor:pointer;font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:all .15s}
+.bank:hover{border-color:var(--accent)}
+.bank.selected{border-color:var(--accent);background:rgba(53,208,127,.08);color:var(--accent)}
+.bank small{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+
+.note{margin-top:12px;padding:12px;background:rgba(250,180,80,.08);border:1px dashed rgba(250,180,80,.4);
+  border-radius:10px;font-size:12px;color:#ffd28a;line-height:1.5}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;
+  background:var(--text);color:#0b1220;font-weight:600;font-size:12px;padding:10px 18px;border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);transition:.25s;pointer-events:none;z-index:9;max-width:88vw;text-align:center}
+.toast.show{transform:translate(-50%,0);opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>СБП<span>·</span>Сканер</h1>
+
+  <!-- СКАНЕР -->
+  <div class="card">
+    <div class="view idle" id="view">
+      <video id="video" playsinline muted></video>
+      <div class="idle-txt" id="idleTxt">Нажмите кнопку ниже<br>и наведите камеру на QR-код</div>
+      <div class="frame" id="frame" style="display:none">
+        <span class="c tl"></span><span class="c tr"></span>
+        <span class="c bl"></span><span class="c br"></span>
+        <div class="scanline" id="scanline" style="display:none"></div>
+      </div>
+    </div>
+    <button class="btn primary" id="btnScan">📷 Сканировать QR-код</button>
+    <div class="status-bar" id="statusBar"></div>
+  </div>
+
+  <!-- РУЧНОЙ ВВОД -->
+  <div class="manual">
+    <input id="pasteInput" type="text" placeholder="…или вставьте ссылку вручную">
+    <button class="btn ghost" id="btnParse">Распарсить</button>
+  </div>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <div class="card result" id="result">
+    <div class="amount-row">
+      <label>Сумма</label>
+      <input id="amountInput" type="text" placeholder="0.00 ₽" inputmode="decimal">
+    </div>
+
+    <div id="infoRows"></div>
+
+    <div class="raw" id="rawData"></div>
+
+    <div class="bank-select">
+      <button class="bank" data-bank="ypay">
+        <span>Яндекс</span><small>Pay</small>
+      </button>
+      <button class="bank" data-bank="tbank">
+        <span>Т-Банк</span><small>T-Bank</small>
+      </button>
+      <button class="bank" data-bank="ozon">
+        <span>Озон</span><small>Банк</small>
+      </button>
+    </div>
+
+    <button class="btn primary" id="btnPay">💳 Оплатить</button>
+
+    <div class="btn-row">
+      <button class="btn ghost" id="btnOpen">↗ Перейти</button>
+      <button class="btn ghost" id="btnCopy">⧉ Копировать</button>
+      <button class="btn ghost" id="btnRescan">↺ Ещё</button>
+    </div>
+
+    <div class="note" id="note" style="display:none"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+
+const BANKS = {
+  ypay:  { name:'Яндекс Pay', pkg:'ru.yandex.yandexpay' },
+  tbank: { name:'Т-Банк',     pkg:'com.idamob.tinkoff.android' },
+  ozon:  { name:'Озон Банк',   pkg:'ru.ozon.app' }
+};
+
+let stream=null, scanTimer=null, detector=null, busy=false, current=null;
+const video=$('#video');
+const offCanvas=document.createElement('canvas');
+const offCtx=offCanvas.getContext('2d',{willReadFrequently:true});
+
+if('BarcodeDetector' in window){
+  try{ detector=new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
+}
+
+/* разбор QR */
+function parseQr(raw){
+  const t = raw.trim();
+  if(/^https:\/\/qr\.nspk\.ru\//i.test(t)){
+    const token = t.replace(/\/+$/,'').split('/').pop();
+    return { type:'nspk', label:'СБП', url:t,
+      rows:[['Тип','Платёжный QR НСПК'],['Токен',token]], raw };
+  }
+  if(t.toUpperCase().startsWith('ST0001')){
+    const fields = {};
+    t.split('|').forEach(p=>{ const i=p.indexOf('='); if(i>0) fields[p.slice(0,i).trim()]=p.slice(i+1).trim(); });
+    const rows = [];
+    const map=[['Name','Получатель'],['PayeeInn','ИНН'],['Inn','ИНН'],['PersonalAcc','Счёт'],
+               ['BankName','Банк'],['BIC','БИК'],['Purpose','Назначение']];
+    map.forEach(([k,l])=>{ if(fields[k]) rows.push([l,fields[k]]); });
+    const sum = fields['Sum'];
+    return { type:'gost', label:'ГОСТ Р 56042', url:null, rows, raw, sumKop:parseInt(sum,10)||0, fields };
+  }
+  if(/^https?:\/\//i.test(t))
+    return { type:'web', label:'Ссылка', url:t, rows:[['URL',t]], raw };
+  return { type:'text', label:'Текст', url:null, rows:[['Содержимое',t]], raw };
+}
+
+/* камера */
+async function startCamera(){
+  if(location.protocol==='http:' && !['localhost','127.0.0.1'].includes(location.hostname)){
+    toast('Камера работает только по HTTPS');
+    return;
+  }
+  if(!detector && typeof jsQR==='undefined'){
+    toast('Сканирование не поддерживается браузером');
+    return;
+  }
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+  }catch(err){
+    toast('Ошибка камеры: '+err.message);
+    return;
+  }
+  video.srcObject=stream;
+  await video.play();
+  $('#view').classList.remove('idle');
+  $('#idleTxt').style.display='none';
+  $('#frame').style.display='block';
+  $('#scanline').style.display='block';
+  $('#btnScan').textContent='⏹ Остановить';
+  setStatus('Ищу QR-код…');
+  scanTimer=setInterval(scanFrame,130);
+}
+
+function stopCamera(){
+  clearInterval(scanTimer); scanTimer=null;
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  video.srcObject=null;
+  $('#scanline').style.display='none';
+  $('#btnScan').textContent='📷 Сканировать QR-код';
+  setStatus('');
+}
+
+function setStatus(t){ $('#statusBar').textContent=t; }
+
+async function scanFrame(){
+  if(busy || video.readyState<2 || !video.videoWidth) return;
+  busy=true;
+  try{
+    const scale=Math.min(1,640/video.videoWidth);
+    offCanvas.width=Math.floor(video.videoWidth*scale);
+    offCanvas.height=Math.floor(video.videoHeight*scale);
+    offCtx.drawImage(video,0,0,offCanvas.width,offCanvas.height);
+    let text=null;
+    if(detector){
+      const codes=await detector.detect(offCanvas);
+      text=codes.length?codes[0].rawValue:null;
+    }else if(typeof jsQR!=='undefined'){
+      const img=offCtx.getImageData(0,0,offCanvas.width,offCanvas.height);
+      const res=jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
+      text=res?res.data:null;
+    }
+    if(text) onDetected(text);
+  }catch(e){}
+  finally{ busy=false; }
+}
+
+/* результат */
+function onDetected(raw){
+  stopCamera();
+  video.pause();
+  navigator.vibrate && navigator.vibrate(80);
+  beep();
+  const p=parseQr(raw);
+  current=p;
+  showResult(p);
+  $('#view').classList.add('idle');
+  $('#idleTxt').style.display='block';
+  $('#frame').style.display='none';
+  $('#idleTxt').textContent='QR распознан ✓';
+}
+
+function showResult(p){
+  const rows=$('#infoRows'); rows.innerHTML='';
+  p.rows.forEach(([l,v])=>{
+    const r=document.createElement('div'); r.className='info-row';
+    r.innerHTML=`<span>${l}</span><span>${v}</span>`;
+    rows.appendChild(r);
+  });
+  $('#rawData').textContent=p.raw;
+
+  // сумма
+  const amt=$('#amountInput');
+  if(p.type==='gost' && p.sumKop){
+    amt.value=(p.sumKop/100).toFixed(2)+' ₽';
+  }else{
+    amt.value='';
+    amt.placeholder='0.00 ₽';
+  }
+
+  const note=$('#note');
+  if(p.type!=='nspk' && p.type!=='gost'){
+    note.style.display='block';
+    note.textContent = p.type==='web'
+      ? 'Это обычная ссылка, а не платёжный QR-код СБП.'
+      : 'Формат не распознан как платёжный.';
+  }else if(p.type==='gost'){
+    note.style.display='block';
+    note.textContent='Реквизиты ГОСТ — банки не принимают их извне. Скопируйте данные вручную.';
+  }else{
+    note.style.display='none';
+  }
+
+  $('#result').style.display='block';
+  $('#result').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* банки */
+const isAndroidChrome=/Android/i.test(navigator.userAgent) && /Chrome\//.test(navigator.userAgent);
+
+function intentUrl(pkg,httpsUrl){
+  const path=httpsUrl.replace(/^https:\/\//i,'');
+  return 'intent://'+path+'#Intent;scheme=https;package='+pkg+
+         ';S.browser_fallback_url='+encodeURIComponent(httpsUrl)+';end';
+}
+
+function openInBank(pkg,url){
+  if(isAndroidChrome){ location.href=intentUrl(pkg,url); }
+  else{ window.open(url,'_blank'); toast('Выберите приложение в системном окне'); }
+}
+
+document.querySelectorAll('.bank').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.bank').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+  };
+});
+
+$('#btnPay').onclick=()=>{
+  if(!current?.url){ toast('Нет платёжной ссылки'); return; }
+  const sel=document.querySelector('.bank.selected');
+  if(sel){
+    const b=BANKS[sel.dataset.bank];
+    openInBank(b.pkg,current.url);
+    toast('Передаю в '+b.name+'…');
+  }else{
+    window.open(current.url,'_blank');
+    toast('Выберите приложение в системном окне');
+  }
+};
+
+$('#btnOpen').onclick=()=>{
+  if(!current?.url){ toast('Нет ссылки'); return; }
+  window.open(current.url,'_blank');
+};
+
+$('#btnCopy').onclick=()=>{
+  if(!current) return;
+  copyText(current.raw);
+};
+
+$('#btnRescan').onclick=()=>{
+  $('#result').style.display='none';
+  $('#view').classList.remove('idle');
+  $('#idleTxt').style.display='none';
+  startCamera();
+};
+
+$('#btnScan').onclick=()=>{
+  if(stream) stopCamera();
+  else startCamera();
+};
+
+$('#btnParse').onclick=()=>{
+  const v=$('#pasteInput').value.trim();
+  if(!v){ toast('Вставьте ссылку или содержимое QR'); return; }
+  stopCamera();
+  $('#view').classList.add('idle');
+  $('#idleTxt').style.display='block';
+  $('#idleTxt').textContent='Данные введены вручную';
+  $('#frame').style.display='none';
+  onDetected(v);
+};
+
+/* форматирование суммы */
+$('#amountInput').addEventListener('input',e=>{
+  let v=e.target.value.replace(/[^\d.,]/g,'').replace(',','.');
+  e.target.value=v?v+' ₽':' ₽';
+});
+
+/* утилиты */
+function copyText(t){
+  if(navigator.clipboard?.writeText){
+    navigator.clipboard.writeText(t).then(()=>toast('Скопировано')).catch(()=>fallbackCopy(t));
+  }else fallbackCopy(t);
+}
+function fallbackCopy(t){
+  const ta=document.createElement('textarea'); ta.value=t;
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('Скопировано'); }catch(e){}
+  ta.remove();
+}
+let toastT;
+function toast(msg){
+  const el=$('#toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200);
+}
+let audio=null;
+function beep(){
+  try{
+    audio=audio||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audio.createOscillator(), g=audio.createGain();
+    o.frequency.value=1100; g.gain.setValueAtTime(.06,audio.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.14);
+    o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime+.15);
+  }catch(e){}
+}
+</script>
+</body>
+</html>
