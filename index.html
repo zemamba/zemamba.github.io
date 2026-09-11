@@ -18,10 +18,14 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         .container {
             max-width: 720px;
-            margin: 100px auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: clamp(52px, 10vh, 88px) 20px;
         }
 
         /* Общая анимация: появление сверху вниз */
@@ -98,7 +102,7 @@
         }
 
         @media (max-width: 480px) {
-            .container { margin: 60px auto; }
+            .container { padding: 48px 20px; }
             h1 { font-size: 26px; }
             .separator { margin: 0 8px; }
         }
