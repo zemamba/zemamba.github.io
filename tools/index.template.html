@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Alexander Belskiy, Lead Infrastructure Architect. 18+ years in enterprise infrastructure, high availability, disaster recovery, and migrations.">
   <meta name="theme-color" content="#ffffff">
-  <title>Alexander Belskiy · Lead Infrastructure Architect</title>
+  <title>$name · $title</title>
   <link rel="canonical" href="https://zemamba.github.io/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='black'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -77,69 +77,45 @@
   <a class="skip-link" href="#summary">Skip to resume</a>
   <main class="container">
     <header>
-      <h1>Alexander Belskiy</h1>
-      <p class="subtitle">Lead Infrastructure Architect</p>
-      <p class="location">Moscow, Russia<span class="availability">Open to relocation · Remote / hybrid / on-site</span></p>
+      <h1>$name</h1>
+      <p class="subtitle">$title</p>
+      <p class="location">$location<span class="availability">$availability</span></p>
       <ul class="contact-list" aria-label="Contact">
-        <li><a href="mailto:belskiyae@ya.ru">belskiyae@ya.ru</a></li>
-        <li><a href="https://t.me/MrRomanov" target="_blank" rel="noopener noreferrer">@MrRomanov</a></li>
-        <li><a href="tel:+79857838899">+7 (985) 783-88-99</a></li>
+        <li><a href="mailto:$email">$email</a></li>
+        <li><a href="https://t.me/$telegram" target="_blank" rel="noopener noreferrer">@$telegram</a></li>
+        <li><a href="tel:+79857838899">$phone</a></li>
       </ul>
-      <a class="download" href="assets/Alexander-Belskiy-Resume.pdf" download="Alexander-Belskiy-Resume.pdf">
+      <a class="download" href="assets/$pdf_name" download="$pdf_name">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>
         Download resume
       </a><span class="download-note">PDF · 1 page</span>
     </header>
     <section id="summary" aria-labelledby="summary-title">
       <h2 id="summary-title">Profile</h2>
-      <p class="summary">Infrastructure architect with 18+ years of experience in banking and large enterprises. Designs highly available platforms, leads infrastructure migrations, and takes architecture from technical requirements through production delivery.</p>
+      <p class="summary">$summary</p>
     </section>
     <section aria-labelledby="skills-title">
       <h2 id="skills-title">Core skills</h2>
-      <dl class="skills"><div><dt>Architecture</dt><dd>Business-critical systems, Active-Active, high availability, disaster recovery, data centers</dd></div>
-<div><dt>Infrastructure</dt><dd>Linux, Windows Server, VMware, KVM, Hyper-V, OpenStack, storage</dd></div>
-<div><dt>Traffic &amp; integration</dt><dd>F5, GSLB, Nginx, REST APIs, Kafka, IBM MQ, Redis, PostgreSQL</dd></div>
-<div><dt>Enterprise services</dt><dd>Active Directory, FreeIPA, Exchange, RuPost, CommuniGate Pro, Zabbix</dd></div>
-<div><dt>Delivery</dt><dd>Architecture governance, technical design, migrations, vendor evaluation, project leadership</dd></div>
-<div><dt>Automation</dt><dd>Python, PowerShell</dd></div></dl>
+      <dl class="skills">$skills</dl>
     </section>
     <section aria-labelledby="experience-title">
       <h2 id="experience-title">Experience</h2>
-      <article class="job">
-        <div class="job-heading"><h3>VTB Bank</h3><p class="dates">Nov 2024 – Present</p></div>
-        <p class="role">Lead System Architect</p><ul><li>Designed Active-Active infrastructure for Shanghai digital banking serving 100,000+ users; brought a second data center and quorum site into operation.</li><li>Migrated 100+ servers, scaled Tomcat to four nodes, and implemented F5 GSLB with Anti-DDoS protection.</li><li>Implemented external monitoring and alerting; validated disaster recovery against a 99.9% availability SLA.</li></ul>
-      </article>
-<article class="job">
-        <div class="job-heading"><h3>Rubytech</h3><p class="dates">Mar 2024 – Oct 2024</p></div>
-        <p class="role">System Architect</p><ul><li>Designed enterprise email architectures and migration plans for Aeroflot and Gazprombank using RuPost and CommuniGate Pro.</li><li>Developed S3 storage and directory architectures; coordinated technical proposals, solution reviews, engineers, and vendors.</li></ul>
-      </article>
-<article class="job">
-        <div class="job-heading"><h3>Rosneft</h3><p class="dates">Mar 2019 – Feb 2024</p></div>
-        <p class="role">IT Infrastructure Architect</p><ul><li>Audited Active Directory infrastructure with 800+ domain controllers for directory consolidation; piloted FreeIPA and CommuniGate Pro migrations.</li><li>Developed reusable infrastructure designs, presented solutions to the architecture committee, and evaluated vendors and total cost of ownership.</li></ul>
-      </article>
-<article class="job">
-        <div class="job-heading"><h3>SIBUR</h3><p class="dates">Dec 2013 – Dec 2018</p></div>
-        <p class="role">IT Project Manager</p><ul><li>Unified 27 enterprises and 20,000+ users on Active Directory and Exchange; deployed centralized monitoring and identity management.</li><li>Led project-office teams of 5–45 people and delivered budget savings exceeding RUB 300 million.</li></ul>
-      </article>
-<article class="job">
-        <div class="job-heading"><h3>INCOM Real Estate</h3><p class="dates">Sep 2010 – Oct 2013</p></div>
-        <p class="role">Head of Communications &amp; Telecom</p><ul><li>Led a team of 3–11, migrated 4,000+ mailboxes to Exchange 2010, and reduced telecom and internet costs by 40%.</li></ul>
-      </article>
-      <ul class="earlier" aria-label="Earlier experience"><li><strong>Remedium Group</strong> · Lead System Administrator <span class="earlier-dates">(Jul 2007 – May 2008)</span>. Improved key-service availability from 85% to 99.7%.</li><li><strong>Optima Group</strong> · Engineer / Tier 2 Support Lead <span class="earlier-dates">(Aug 2005 – Jun 2007)</span>. Increased support ticket processing speed by 50%.</li></ul>
+      $experience
+      <ul class="earlier" aria-label="Earlier experience">$earlier</ul>
     </section>
     <section aria-labelledby="education-title">
       <h2 id="education-title">Education & training</h2>
-      <h3>Bauman Moscow State Technical University</h3>
-      <p class="education-detail">Higher education, Automation of Technological Processes and Production · 2007</p>
-      <p class="training">CommuniGate Pro enterprise communications; RuPost RP-2001SE (2024). Project management (2017).</p>
-      <p class="languages">English — B2 (upper-intermediate) · Russian — native</p>
+      <h3>$school</h3>
+      <p class="education-detail">$qualification · $year</p>
+      <p class="training">$training</p>
+      <p class="languages">$languages</p>
     </section>
     <section aria-labelledby="links-title">
       <h2 id="links-title">Links</h2>
       <ul class="links">
-        <li><a href="https://www.linkedin.com/in/abelskiy/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-        <li><a href="https://github.com/zemamba" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        <li><a href="https://leetcode.com/u/zemamba/" target="_blank" rel="noopener noreferrer">LeetCode</a></li>
+        <li><a href="$linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href="$github" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="$leetcode" target="_blank" rel="noopener noreferrer">LeetCode</a></li>
       </ul>
     </section>
     <footer>Updated October 2026</footer>

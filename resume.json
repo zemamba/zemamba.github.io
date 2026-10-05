@@ -1,0 +1,67 @@
+{
+  "name": "Alexander Belskiy",
+  "title": "Lead Infrastructure Architect",
+  "location": "Moscow, Russia",
+  "availability": "Open to relocation · Remote / hybrid / on-site",
+  "email": "belskiyae@ya.ru",
+  "phone": "+7 (985) 783-88-99",
+  "telegram": "MrRomanov",
+  "linkedin": "https://www.linkedin.com/in/abelskiy/",
+  "github": "https://github.com/zemamba",
+  "leetcode": "https://leetcode.com/u/zemamba/",
+  "summary": "Infrastructure architect with 18+ years of experience in banking and large enterprises. Designs highly available platforms, leads infrastructure migrations, and takes architecture from technical requirements through production delivery.",
+  "skills": [
+    ["Architecture", "Business-critical systems, Active-Active, high availability, disaster recovery, data centers"],
+    ["Infrastructure", "Linux, Windows Server, VMware, KVM, Hyper-V, OpenStack, storage"],
+    ["Traffic & integration", "F5, GSLB, Nginx, REST APIs, Kafka, IBM MQ, Redis, PostgreSQL"],
+    ["Enterprise services", "Active Directory, FreeIPA, Exchange, RuPost, CommuniGate Pro, Zabbix"],
+    ["Delivery", "Architecture governance, technical design, migrations, vendor evaluation, project leadership"],
+    ["Automation", "Python, PowerShell"]
+  ],
+  "experience": [
+    {
+      "company": "VTB Bank", "role": "Lead System Architect", "start": "Nov 2024", "end": "Present",
+      "bullets": [
+        "Designed Active-Active infrastructure for Shanghai digital banking serving 100,000+ users; brought a second data center and quorum site into operation.",
+        "Migrated 100+ servers, scaled Tomcat to four nodes, and implemented F5 GSLB with Anti-DDoS protection.",
+        "Implemented external monitoring and alerting; validated disaster recovery against a 99.9% availability SLA."
+      ]
+    },
+    {
+      "company": "Rubytech", "role": "System Architect", "start": "Mar 2024", "end": "Oct 2024",
+      "bullets": [
+        "Designed enterprise email architectures and migration plans for Aeroflot and Gazprombank using RuPost and CommuniGate Pro.",
+        "Developed S3 storage and directory architectures; coordinated technical proposals, solution reviews, engineers, and vendors."
+      ]
+    },
+    {
+      "company": "Rosneft", "role": "IT Infrastructure Architect", "start": "Mar 2019", "end": "Feb 2024",
+      "bullets": [
+        "Audited Active Directory infrastructure with 800+ domain controllers for directory consolidation; piloted FreeIPA and CommuniGate Pro migrations.",
+        "Developed reusable infrastructure designs, presented solutions to the architecture committee, and evaluated vendors and total cost of ownership."
+      ]
+    },
+    {
+      "company": "SIBUR", "role": "IT Project Manager", "start": "Dec 2013", "end": "Dec 2018",
+      "bullets": [
+        "Unified 27 enterprises and 20,000+ users on Active Directory and Exchange; deployed centralized monitoring and identity management.",
+        "Led project-office teams of 5–45 people and delivered budget savings exceeding RUB 300 million."
+      ]
+    },
+    {
+      "company": "INCOM Real Estate", "role": "Head of Communications & Telecom", "start": "Sep 2010", "end": "Oct 2013",
+      "bullets": ["Led a team of 3–11, migrated 4,000+ mailboxes to Exchange 2010, and reduced telecom and internet costs by 40%."]
+    }
+  ],
+  "earlier": [
+    {"company": "Remedium Group", "role": "Lead System Administrator", "start": "Jul 2007", "end": "May 2008", "result": "Improved key-service availability from 85% to 99.7%."},
+    {"company": "Optima Group", "role": "Engineer / Tier 2 Support Lead", "start": "Aug 2005", "end": "Jun 2007", "result": "Increased support ticket processing speed by 50%."}
+  ],
+  "education": {
+    "school": "Bauman Moscow State Technical University",
+    "qualification": "Higher education, Automation of Technological Processes and Production",
+    "year": "2007"
+  },
+  "training": "CommuniGate Pro enterprise communications; RuPost RP-2001SE (2024). Project management (2017).",
+  "languages": "English — B2 (upper-intermediate) · Russian — native"
+}
