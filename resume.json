@@ -9,7 +9,7 @@
   "linkedin": "https://www.linkedin.com/in/abelskiy/",
   "github": "https://github.com/zemamba",
   "leetcode": "https://leetcode.com/u/zemamba/",
-  "summary": "Infrastructure architect with 18+ years of experience in banking and large enterprises. Designs highly available platforms, leads infrastructure migrations, and takes architecture from technical requirements through production delivery.",
+  "summary": "System architect with 18+ years of experience in banking and large enterprises. Designs highly available platforms, leads infrastructure migrations, and takes architecture from technical requirements through production delivery.",
   "skills": [
     ["Architecture", "Business-critical systems, Active-Active, high availability, disaster recovery, data centers"],
     ["Infrastructure", "Linux, Windows Server, VMware, KVM, Hyper-V, OpenStack, storage"],

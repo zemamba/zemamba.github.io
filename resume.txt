@@ -8,7 +8,7 @@ https://t.me/MrRomanov
 https://www.linkedin.com/in/abelskiy/
 
 PROFILE
-Infrastructure architect with 18+ years of experience in banking and large enterprises. Designs highly available platforms, leads infrastructure migrations, and takes architecture from technical requirements through production delivery.
+System architect with 18+ years of experience in banking and large enterprises. Designs highly available platforms, leads infrastructure migrations, and takes architecture from technical requirements through production delivery.
 
 CORE SKILLS
 Architecture: Business-critical systems, Active-Active, high availability, disaster recovery, data centers
