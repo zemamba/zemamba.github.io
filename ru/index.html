@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Системный архитектор с опытом более 18 лет в банковском секторе и крупных компаниях. Проектирую отказоустойчивые платформы, веду миграции инфраструктуры и сопровождаю решения от требований до ввода в эксплуатацию.">
+  <meta name="theme-color" content="#ffffff">
+  <title>Александр Бельский · Ведущий системный архитектор</title>
+  <link rel="canonical" href="https://zemamba.github.io/ru/">
+  <link rel="alternate" hreflang="en" href="https://zemamba.github.io/">
+  <link rel="alternate" hreflang="ru" href="https://zemamba.github.io/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://zemamba.github.io/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='black'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html { color-scheme: light; }
+    body { margin: 0; background: #fff; color: #111; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 720px; margin: 0 auto; padding: clamp(48px, 9vh, 88px) 24px 48px; }
+    h1 { margin: 0; color: #000; font-size: clamp(27px, 5vw, 32px); line-height: 1.2; font-weight: 600; letter-spacing: -.8px; }
+    .subtitle { margin: 8px 0 0; color: #555; font-size: 16px; }
+    .location { margin: 12px 0 0; color: #666; font-size: 12px; }
+    .availability { display: block; }
+    a { color: #111; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+    a:hover { color: #555; }
+    a:focus-visible { outline: 2px solid #111; outline-offset: 5px; border-radius: 2px; }
+    .contact-list, .links { display: flex; flex-wrap: wrap; gap: 8px 22px; list-style: none; padding: 0; margin: 16px 0 0; }
+    .contact-list a, .links a { display: inline-flex; align-items: center; min-height: 32px; }
+    .contact-list { font-size: 13px; }
+    .language-switch { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 20px; font-size: 12px; }
+    .language-switch a { color: #666; text-decoration: none; min-width: 32px; min-height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+    .language-switch a[aria-current="page"] { color: #111; font-weight: 600; border-bottom: 1px solid #111; }
+    .language-switch a:hover { color: #111; }
+    .download-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 22px; }
+    .download { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 16px; border: 1px solid #111; border-radius: 4px; background: #111; color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; text-decoration: none; }
+    .download:hover { background: #333; border-color: #333; color: #fff; }
+    .download svg { width: 16px; height: 16px; flex: none; }
+    .alternate-download { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; }
+    .download-note { color: #666; font-size: 11px; }
+    section { margin-top: 36px; }
+    h2 { margin: 0 0 16px; padding-bottom: 10px; border-bottom: 1px solid #e8e8e8; color: #666; font-size: 11px; font-weight: 500; letter-spacing: 1.3px; text-transform: uppercase; }
+    p { margin: 0; }
+    .summary { max-width: 64ch; }
+    .skills { margin: 0; }
+    .skills > div { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 12px; margin: 9px 0; }
+    dt { font-weight: 500; }
+    dd { margin: 0; color: #555; }
+    .job + .job { margin-top: 25px; }
+    .job-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+    h3 { margin: 0; font-size: 15px; font-weight: 600; }
+    .dates { color: #666; font-size: 12px; white-space: nowrap; }
+    .role { color: #555; font-size: 13px; margin-top: 2px; }
+    .job ul { margin: 9px 0 0; padding-left: 18px; }
+    .job li + li { margin-top: 5px; }
+    .earlier { margin: 22px 0 0; padding: 0; list-style: none; color: #555; font-size: 12px; }
+    .earlier li + li { margin-top: 9px; }
+    .earlier strong { color: #111; font-weight: 500; }
+    .earlier-dates { color: #666; }
+    .education-detail, .training, .languages { color: #555; font-size: 13px; margin-top: 6px; }
+    .training { margin-top: 14px; }
+    .links { margin-top: 0; }
+    footer { margin-top: 32px; color: #666; font-size: 11px; }
+    .skip-link { position: absolute; left: 16px; top: -80px; padding: 10px; background: #fff; }
+    .skip-link:focus { top: 12px; }
+    @media (max-width: 520px) {
+      .container { padding: 40px 20px 32px; }
+      .skills > div { grid-template-columns: 1fr; gap: 1px; margin: 12px 0; }
+      .job-heading { display: block; }
+      .dates { margin-top: 3px; }
+      .contact-list { gap: 4px 18px; }
+      section { margin-top: 32px; }
+    }
+    @media print {
+      .container { max-width: none; padding: 0; }
+      body { font-family: Arial, sans-serif; font-size: 10pt; }
+      .language-switch, .download-row, .skip-link, footer { display: none; }
+      section { margin-top: 18px; }
+      article { break-inside: avoid; }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#summary">Перейти к резюме</a>
+  <main class="container">
+    <header>
+      <nav class="language-switch" aria-label="Язык">
+        <a href="/" hreflang="en" lang="en" >EN</a>
+        <a href="/ru/" hreflang="ru" lang="ru" aria-current="page">RU</a>
+      </nav>
+      <h1>Александр Бельский</h1>
+      <p class="subtitle">Ведущий системный архитектор</p>
+      <p class="location">Москва, Россия<span class="availability">Готов к переезду · Удалённо / гибрид / офис</span></p>
+      <ul class="contact-list" aria-label="Контакты">
+        <li><a href="mailto:belskiyae@ya.ru">belskiyae@ya.ru</a></li>
+        <li><a href="https://t.me/MrRomanov" target="_blank" rel="noopener noreferrer">@MrRomanov</a></li>
+        <li><a href="tel:+79857838899">+7 (985) 783-88-99</a></li>
+      </ul>
+      <div class="download-row">
+      <a class="download" href="../assets/Alexander-Belskiy-Resume-RU.pdf" download="Alexander-Belskiy-Resume-RU.pdf">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>
+        Скачать резюме
+      </a><span class="download-note">PDF · 1 страница</span>
+      <a class="alternate-download" href="../assets/Alexander-Belskiy-Resume.pdf" download="Alexander-Belskiy-Resume.pdf" hreflang="en">PDF на английском</a>
+      </div>
+    </header>
+    <section id="summary" aria-labelledby="summary-title">
+      <h2 id="summary-title">О себе</h2>
+      <p class="summary">Системный архитектор с опытом более 18 лет в банковском секторе и крупных компаниях. Проектирую отказоустойчивые платформы, веду миграции инфраструктуры и сопровождаю решения от требований до ввода в эксплуатацию.</p>
+    </section>
+    <section aria-labelledby="skills-title">
+      <h2 id="skills-title">Ключевые навыки</h2>
+      <dl class="skills"><div><dt>Архитектура</dt><dd>Критичные системы, Active-Active, высокая доступность, DR, ЦОД</dd></div>
+<div><dt>Инфраструктура</dt><dd>Linux, Windows Server, VMware, KVM, Hyper-V, OpenStack, СХД</dd></div>
+<div><dt>Трафик и интеграции</dt><dd>F5, GSLB, Nginx, REST API, Kafka, IBM MQ, Redis, PostgreSQL</dd></div>
+<div><dt>Корпоративные сервисы</dt><dd>Active Directory, FreeIPA, Exchange, RuPost, CommuniGate Pro, Zabbix</dd></div>
+<div><dt>Реализация</dt><dd>Архитектурный контроль, техпроектирование, миграции, оценка вендоров, управление проектами</dd></div>
+<div><dt>Автоматизация</dt><dd>Python, PowerShell</dd></div></dl>
+    </section>
+    <section aria-labelledby="experience-title">
+      <h2 id="experience-title">Опыт работы</h2>
+      <article class="job">
+        <div class="job-heading"><h3>Банк ВТБ</h3><p class="dates">Ноя 2024 – наст. время</p></div>
+        <p class="role">Ведущий системный архитектор</p><ul><li>Спроектировал Active-Active инфраструктуру ДБО Шанхай для 100 000+ пользователей; ввёл в эксплуатацию второй ЦОД и кворумную площадку.</li><li>Мигрировал 100+ серверов, масштабировал Tomcat до четырёх узлов и внедрил F5 GSLB с защитой от DDoS.</li><li>Внедрил внешний мониторинг и оповещение; DR-испытания подтвердили доступность на уровне SLA 99,9%.</li></ul>
+      </article>
+<article class="job">
+        <div class="job-heading"><h3>Rubytech</h3><p class="dates">Мар 2024 – Окт 2024</p></div>
+        <p class="role">Системный архитектор</p><ul><li>Спроектировал почтовую инфраструктуру и миграцию на RuPost и CommuniGate Pro для Аэрофлота и Газпромбанка.</li><li>Разработал архитектуры S3-хранилищ и служб каталогов; координировал инженеров и вендоров, защищал решения перед заказчиками.</li></ul>
+      </article>
+<article class="job">
+        <div class="job-heading"><h3>Роснефть</h3><p class="dates">Мар 2019 – Фев 2024</p></div>
+        <p class="role">Архитектор ИТ-инфраструктуры</p><ul><li>Провёл аудит Active Directory с 800+ контроллерами домена для консолидации служб каталогов; участвовал в пилоте импортозамещения.</li><li>Разработал типовые инфраструктурные решения, защищал архитектуру на комитете, оценивал вендоров и совокупную стоимость владения.</li></ul>
+      </article>
+<article class="job">
+        <div class="job-heading"><h3>СИБУР</h3><p class="dates">Дек 2013 – Дек 2018</p></div>
+        <p class="role">Руководитель ИТ-проектов</p><ul><li>Объединил 27 предприятий и 20 000+ пользователей на базе Active Directory и Exchange; внедрил централизованный мониторинг и управление учётными записями.</li><li>Руководил командами проектного офиса от 5 до 45 человек; обеспечил экономию бюджета более 300 млн ₽.</li></ul>
+      </article>
+<article class="job">
+        <div class="job-heading"><h3>ИНКОМ-НЕДВИЖИМОСТЬ</h3><p class="dates">Сен 2010 – Окт 2013</p></div>
+        <p class="role">Руководитель направления коммуникации и связи</p><ul><li>Руководил командой из 3–11 человек, мигрировал 4000+ почтовых ящиков на Exchange 2010 и снизил затраты на связь и интернет на 40%.</li></ul>
+      </article>
+      <ul class="earlier" aria-label="Предыдущий опыт"><li><strong>Группа Ремедиум</strong> · Ведущий системный администратор <span class="earlier-dates">(Июл 2007 – Май 2008)</span>. Повысил доступность ключевых сервисов с 85% до 99,7%.</li><li><strong>Группа Оптима</strong> · Инженер / руководитель 2-й линии поддержки <span class="earlier-dates">(Авг 2005 – Июн 2007)</span>. Ускорил обработку заявок на 50%.</li></ul>
+    </section>
+    <section aria-labelledby="education-title">
+      <h2 id="education-title">Образование и курсы</h2>
+      <h3>МГТУ им. Н. Э. Баумана</h3>
+      <p class="education-detail">Высшее образование, автоматизация технологических процессов и производств · 2007</p>
+      <p class="training">Корпоративные коммуникации на базе CommuniGate Pro; RuPost RP-2001SE (2024). Управление проектами (2017).</p>
+      <p class="languages">Русский — родной · Английский — B2</p>
+    </section>
+    <section aria-labelledby="links-title">
+      <h2 id="links-title">Ссылки</h2>
+      <ul class="links">
+        <li><a href="https://www.linkedin.com/in/abelskiy/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href="https://github.com/zemamba" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://leetcode.com/u/zemamba/" target="_blank" rel="noopener noreferrer">LeetCode</a></li>
+      </ul>
+    </section>
+    <footer>Обновлено в октябре 2026</footer>
+  </main>
+</body>
+</html>

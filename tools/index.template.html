@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="$lang">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Alexander Belskiy, Lead System Architect. 18+ years in enterprise infrastructure, high availability, disaster recovery, and migrations.">
+  <meta name="description" content="$description">
   <meta name="theme-color" content="#ffffff">
   <title>$name · $title</title>
-  <link rel="canonical" href="https://zemamba.github.io/">
+  <link rel="canonical" href="$canonical">
+  <link rel="alternate" hreflang="en" href="https://zemamba.github.io/">
+  <link rel="alternate" hreflang="ru" href="https://zemamba.github.io/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://zemamba.github.io/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='black'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,10 +29,16 @@
     .contact-list, .links { display: flex; flex-wrap: wrap; gap: 8px 22px; list-style: none; padding: 0; margin: 16px 0 0; }
     .contact-list a, .links a { display: inline-flex; align-items: center; min-height: 32px; }
     .contact-list { font-size: 13px; }
-    .download { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; margin-top: 22px; padding: 10px 16px; border: 1px solid #111; border-radius: 4px; background: #111; color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; text-decoration: none; }
+    .language-switch { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 20px; font-size: 12px; }
+    .language-switch a { color: #666; text-decoration: none; min-width: 32px; min-height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+    .language-switch a[aria-current="page"] { color: #111; font-weight: 600; border-bottom: 1px solid #111; }
+    .language-switch a:hover { color: #111; }
+    .download-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 22px; }
+    .download { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 16px; border: 1px solid #111; border-radius: 4px; background: #111; color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; text-decoration: none; }
     .download:hover { background: #333; border-color: #333; color: #fff; }
     .download svg { width: 16px; height: 16px; flex: none; }
-    .download-note { display: inline-block; margin-left: 10px; color: #666; font-size: 11px; }
+    .alternate-download { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; }
+    .download-note { color: #666; font-size: 11px; }
     section { margin-top: 36px; }
     h2 { margin: 0 0 16px; padding-bottom: 10px; border-bottom: 1px solid #e8e8e8; color: #666; font-size: 11px; font-weight: 500; letter-spacing: 1.3px; text-transform: uppercase; }
     p { margin: 0; }
@@ -66,7 +75,7 @@
     @media print {
       .container { max-width: none; padding: 0; }
       body { font-family: Arial, sans-serif; font-size: 10pt; }
-      .download, .download-note, .skip-link, footer { display: none; }
+      .language-switch, .download-row, .skip-link, footer { display: none; }
       section { margin-top: 18px; }
       article { break-inside: avoid; }
       a { text-decoration: none; }
@@ -74,51 +83,58 @@
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#summary">Skip to resume</a>
+  <a class="skip-link" href="#summary">$skip_label</a>
   <main class="container">
     <header>
+      <nav class="language-switch" aria-label="$language_label">
+        <a href="/" hreflang="en" lang="en" $en_current>EN</a>
+        <a href="/ru/" hreflang="ru" lang="ru" $ru_current>RU</a>
+      </nav>
       <h1>$name</h1>
       <p class="subtitle">$title</p>
       <p class="location">$location<span class="availability">$availability</span></p>
-      <ul class="contact-list" aria-label="Contact">
+      <ul class="contact-list" aria-label="$contact_label">
         <li><a href="mailto:$email">$email</a></li>
         <li><a href="https://t.me/$telegram" target="_blank" rel="noopener noreferrer">@$telegram</a></li>
         <li><a href="tel:+79857838899">$phone</a></li>
       </ul>
-      <a class="download" href="assets/$pdf_name" download="$pdf_name">
+      <div class="download-row">
+      <a class="download" href="$asset_prefix$pdf_name" download="$pdf_name">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>
-        Download resume
-      </a><span class="download-note">PDF · 1 page</span>
+        $download_label
+      </a><span class="download-note">PDF · $page_label</span>
+      <a class="alternate-download" href="$asset_prefix$other_pdf_name" download="$other_pdf_name" hreflang="$other_lang">$alternate_download_label</a>
+      </div>
     </header>
     <section id="summary" aria-labelledby="summary-title">
-      <h2 id="summary-title">Profile</h2>
+      <h2 id="summary-title">$profile_label</h2>
       <p class="summary">$summary</p>
     </section>
     <section aria-labelledby="skills-title">
-      <h2 id="skills-title">Core skills</h2>
+      <h2 id="skills-title">$skills_label</h2>
       <dl class="skills">$skills</dl>
     </section>
     <section aria-labelledby="experience-title">
-      <h2 id="experience-title">Experience</h2>
+      <h2 id="experience-title">$experience_label</h2>
       $experience
-      <ul class="earlier" aria-label="Earlier experience">$earlier</ul>
+      <ul class="earlier" aria-label="$earlier_label">$earlier</ul>
     </section>
     <section aria-labelledby="education-title">
-      <h2 id="education-title">Education & training</h2>
+      <h2 id="education-title">$education_label</h2>
       <h3>$school</h3>
       <p class="education-detail">$qualification · $year</p>
       <p class="training">$training</p>
       <p class="languages">$languages</p>
     </section>
     <section aria-labelledby="links-title">
-      <h2 id="links-title">Links</h2>
+      <h2 id="links-title">$links_label</h2>
       <ul class="links">
         <li><a href="$linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
         <li><a href="$github" target="_blank" rel="noopener noreferrer">GitHub</a></li>
         <li><a href="$leetcode" target="_blank" rel="noopener noreferrer">LeetCode</a></li>
       </ul>
     </section>
-    <footer>Updated October 2026</footer>
+    <footer>$updated_label</footer>
   </main>
 </body>
 </html>

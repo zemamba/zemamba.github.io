@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Alexander Belskiy, Lead System Architect. 18+ years in enterprise infrastructure, high availability, disaster recovery, and migrations.">
+  <meta name="description" content="System architect with 18+ years of experience in banking and large enterprises. Designs highly available platforms, leads infrastructure migrations, and takes architecture from technical requirements through production delivery.">
   <meta name="theme-color" content="#ffffff">
   <title>Alexander Belskiy · Lead System Architect</title>
   <link rel="canonical" href="https://zemamba.github.io/">
+  <link rel="alternate" hreflang="en" href="https://zemamba.github.io/">
+  <link rel="alternate" hreflang="ru" href="https://zemamba.github.io/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://zemamba.github.io/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='black'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,10 +29,16 @@
     .contact-list, .links { display: flex; flex-wrap: wrap; gap: 8px 22px; list-style: none; padding: 0; margin: 16px 0 0; }
     .contact-list a, .links a { display: inline-flex; align-items: center; min-height: 32px; }
     .contact-list { font-size: 13px; }
-    .download { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; margin-top: 22px; padding: 10px 16px; border: 1px solid #111; border-radius: 4px; background: #111; color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; text-decoration: none; }
+    .language-switch { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 20px; font-size: 12px; }
+    .language-switch a { color: #666; text-decoration: none; min-width: 32px; min-height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+    .language-switch a[aria-current="page"] { color: #111; font-weight: 600; border-bottom: 1px solid #111; }
+    .language-switch a:hover { color: #111; }
+    .download-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 22px; }
+    .download { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 16px; border: 1px solid #111; border-radius: 4px; background: #111; color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; text-decoration: none; }
     .download:hover { background: #333; border-color: #333; color: #fff; }
     .download svg { width: 16px; height: 16px; flex: none; }
-    .download-note { display: inline-block; margin-left: 10px; color: #666; font-size: 11px; }
+    .alternate-download { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; }
+    .download-note { color: #666; font-size: 11px; }
     section { margin-top: 36px; }
     h2 { margin: 0 0 16px; padding-bottom: 10px; border-bottom: 1px solid #e8e8e8; color: #666; font-size: 11px; font-weight: 500; letter-spacing: 1.3px; text-transform: uppercase; }
     p { margin: 0; }
@@ -66,7 +75,7 @@
     @media print {
       .container { max-width: none; padding: 0; }
       body { font-family: Arial, sans-serif; font-size: 10pt; }
-      .download, .download-note, .skip-link, footer { display: none; }
+      .language-switch, .download-row, .skip-link, footer { display: none; }
       section { margin-top: 18px; }
       article { break-inside: avoid; }
       a { text-decoration: none; }
@@ -77,6 +86,10 @@
   <a class="skip-link" href="#summary">Skip to resume</a>
   <main class="container">
     <header>
+      <nav class="language-switch" aria-label="Language">
+        <a href="/" hreflang="en" lang="en" aria-current="page">EN</a>
+        <a href="/ru/" hreflang="ru" lang="ru" >RU</a>
+      </nav>
       <h1>Alexander Belskiy</h1>
       <p class="subtitle">Lead System Architect</p>
       <p class="location">Moscow, Russia<span class="availability">Open to relocation · Remote / hybrid / on-site</span></p>
@@ -85,10 +98,13 @@
         <li><a href="https://t.me/MrRomanov" target="_blank" rel="noopener noreferrer">@MrRomanov</a></li>
         <li><a href="tel:+79857838899">+7 (985) 783-88-99</a></li>
       </ul>
+      <div class="download-row">
       <a class="download" href="assets/Alexander-Belskiy-Resume.pdf" download="Alexander-Belskiy-Resume.pdf">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>
         Download resume
       </a><span class="download-note">PDF · 1 page</span>
+      <a class="alternate-download" href="assets/Alexander-Belskiy-Resume-RU.pdf" download="Alexander-Belskiy-Resume-RU.pdf" hreflang="ru">Russian PDF</a>
+      </div>
     </header>
     <section id="summary" aria-labelledby="summary-title">
       <h2 id="summary-title">Profile</h2>
@@ -128,7 +144,7 @@
       <ul class="earlier" aria-label="Earlier experience"><li><strong>Remedium Group</strong> · Lead System Administrator <span class="earlier-dates">(Jul 2007 – May 2008)</span>. Improved key-service availability from 85% to 99.7%.</li><li><strong>Optima Group</strong> · Engineer / Tier 2 Support Lead <span class="earlier-dates">(Aug 2005 – Jun 2007)</span>. Increased support ticket processing speed by 50%.</li></ul>
     </section>
     <section aria-labelledby="education-title">
-      <h2 id="education-title">Education & training</h2>
+      <h2 id="education-title">Education &amp; training</h2>
       <h3>Bauman Moscow State Technical University</h3>
       <p class="education-detail">Higher education, Automation of Technological Processes and Production · 2007</p>
       <p class="training">CommuniGate Pro enterprise communications; RuPost RP-2001SE (2024). Project management (2017).</p>
