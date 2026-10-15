@@ -1,7 +1,7 @@
 Alexander Belskiy
 Lead System Architect
 Moscow, Russia
-Open to relocation · Remote / hybrid / on-site
+Open to relocation: Georgia, Kazakhstan, Serbia, Uzbekistan · Remote / hybrid / on-site
 belskiyae@ya.ru
 +7 (985) 783-88-99
 https://t.me/MrRomanov
@@ -30,18 +30,18 @@ Rubytech | System Architect | Mar 2024 - Oct 2024
 - Developed S3 storage and directory architectures; coordinated technical proposals, solution reviews, engineers, and vendors.
 
 Rosneft | IT Infrastructure Architect | Mar 2019 - Feb 2024
-- Audited Active Directory infrastructure with 800+ domain controllers for directory consolidation; piloted FreeIPA and CommuniGate Pro migrations.
-- Developed reusable infrastructure designs, presented solutions to the architecture committee, and evaluated vendors and total cost of ownership.
+- Audited 800+ Active Directory domain controllers for directory consolidation and piloted replacement of core infrastructure services.
+- Developed reusable infrastructure designs; supported FreeIPA and CommuniGate Pro migration projects, presented solutions to the architecture committee, and evaluated vendors and total cost of ownership.
 
 SIBUR | IT Project Manager | Dec 2013 - Dec 2018
-- Unified 27 enterprises and 20,000+ users on Active Directory and Exchange; deployed centralized monitoring and identity management.
+- Unified 27 enterprises and 20,000+ users on Active Directory and Exchange 2010; deployed centralized monitoring and integrated Oracle Identity Manager.
 - Led project-office teams of 5–45 people and delivered budget savings exceeding RUB 300 million.
 
 INCOM Real Estate | Head of Communications & Telecom | Sep 2010 - Oct 2013
 - Led a team of 3–11, migrated 4,000+ mailboxes to Exchange 2010, and reduced telecom and internet costs by 40%.
 
 Remedium Group | Lead System Administrator | Jul 2007 - May 2008
-Improved key-service availability from 85% to 99.7%.
+Improved availability of key services from 85% to 99.7%.
 
 Optima Group | Engineer / Tier 2 Support Lead | Aug 2005 - Jun 2007
 Increased support ticket processing speed by 50%.
@@ -49,5 +49,5 @@ Increased support ticket processing speed by 50%.
 EDUCATION & TRAINING
 Bauman Moscow State Technical University | 2007
 Higher education, Automation of Technological Processes and Production
-CommuniGate Pro enterprise communications; RuPost RP-2001SE (2024). Project management (2017).
+CommuniGate Pro enterprise communications and RuPost RP-2001SE (2024); project management (2017).
 English — B2 (upper-intermediate) · Russian — native

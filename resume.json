@@ -2,7 +2,7 @@
   "name": "Alexander Belskiy",
   "title": "Lead System Architect",
   "location": "Moscow, Russia",
-  "availability": "Open to relocation · Remote / hybrid / on-site",
+  "availability": "Open to relocation: Georgia, Kazakhstan, Serbia, Uzbekistan · Remote / hybrid / on-site",
   "email": "belskiyae@ya.ru",
   "phone": "+7 (985) 783-88-99",
   "telegram": "MrRomanov",
@@ -37,14 +37,14 @@
     {
       "company": "Rosneft", "role": "IT Infrastructure Architect", "start": "Mar 2019", "end": "Feb 2024",
       "bullets": [
-        "Audited Active Directory infrastructure with 800+ domain controllers for directory consolidation; piloted FreeIPA and CommuniGate Pro migrations.",
-        "Developed reusable infrastructure designs, presented solutions to the architecture committee, and evaluated vendors and total cost of ownership."
+        "Audited 800+ Active Directory domain controllers for directory consolidation and piloted replacement of core infrastructure services.",
+        "Developed reusable infrastructure designs; supported FreeIPA and CommuniGate Pro migration projects, presented solutions to the architecture committee, and evaluated vendors and total cost of ownership."
       ]
     },
     {
       "company": "SIBUR", "role": "IT Project Manager", "start": "Dec 2013", "end": "Dec 2018",
       "bullets": [
-        "Unified 27 enterprises and 20,000+ users on Active Directory and Exchange; deployed centralized monitoring and identity management.",
+        "Unified 27 enterprises and 20,000+ users on Active Directory and Exchange 2010; deployed centralized monitoring and integrated Oracle Identity Manager.",
         "Led project-office teams of 5–45 people and delivered budget savings exceeding RUB 300 million."
       ]
     },
@@ -54,7 +54,7 @@
     }
   ],
   "earlier": [
-    {"company": "Remedium Group", "role": "Lead System Administrator", "start": "Jul 2007", "end": "May 2008", "result": "Improved key-service availability from 85% to 99.7%."},
+    {"company": "Remedium Group", "role": "Lead System Administrator", "start": "Jul 2007", "end": "May 2008", "result": "Improved availability of key services from 85% to 99.7%."},
     {"company": "Optima Group", "role": "Engineer / Tier 2 Support Lead", "start": "Aug 2005", "end": "Jun 2007", "result": "Increased support ticket processing speed by 50%."}
   ],
   "education": {
@@ -62,6 +62,6 @@
     "qualification": "Higher education, Automation of Technological Processes and Production",
     "year": "2007"
   },
-  "training": "CommuniGate Pro enterprise communications; RuPost RP-2001SE (2024). Project management (2017).",
+  "training": "CommuniGate Pro enterprise communications and RuPost RP-2001SE (2024); project management (2017).",
   "languages": "English — B2 (upper-intermediate) · Russian — native"
 }
