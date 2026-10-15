@@ -10,6 +10,35 @@
   <link rel="alternate" hreflang="en" href="https://zemamba.github.io/">
   <link rel="alternate" hreflang="ru" href="https://zemamba.github.io/ru/">
   <link rel="alternate" hreflang="x-default" href="https://zemamba.github.io/">
+  <script>
+    (function () {
+      var savedLanguage = null;
+      try { savedLanguage = localStorage.getItem('resume-language'); } catch (error) { /* Storage may be disabled. */ }
+
+      if (location.pathname === '/') {
+        var browserLanguages = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ''];
+        var preferredLanguage = browserLanguages.map(function (language) {
+          return language.toLowerCase().split('-')[0];
+        }).find(function (language) {
+          return language === 'ru' || language === 'en';
+        }) || 'en';
+
+        if ((savedLanguage || preferredLanguage) === 'ru') {
+          location.replace('/ru/' + location.search + location.hash);
+          return;
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.language-switch a[hreflang]').forEach(function (link) {
+          link.addEventListener('click', function () {
+            try { localStorage.setItem('resume-language', link.hreflang); } catch (error) { /* Links still work. */ }
+          });
+        });
+      });
+    }());
+  </script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='black'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

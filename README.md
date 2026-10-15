@@ -21,7 +21,10 @@ still one page after content changes. Dates and education follow the supplied
 resume; no academic degree equivalence is inferred.
 
 For a local preview, run `python3 -m http.server 8000` from this directory.
-The website has no JavaScript or framework dependency. Inter is loaded
-from Google Fonts, with system fonts as a fallback.
+The homepage detects the browser's preferred language and redirects Russian
+visitors to `/ru/`. The language switch saves an explicit EN/RU choice in
+`localStorage`; direct visits to `/ru/` are never redirected. If JavaScript or
+storage is unavailable, both pages and their language links remain usable.
+Inter is loaded from Google Fonts, with system fonts as a fallback.
 The PDF builder uses the bundled DejaVu Sans Condensed fonts for Cyrillic;
 their redistribution terms are in `tools/fonts/LICENSE-DejaVu.txt`.
