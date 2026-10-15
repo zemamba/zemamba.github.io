@@ -24,7 +24,7 @@ PDF_NAMES = {
 LABELS = {
     "en": {
         "skip_label": "Skip to resume", "language_label": "Language", "contact_label": "Contact",
-        "download_label": "Download resume", "alternate_download_label": "Russian PDF",
+        "download_label": "Download resume",
         "page_label": "1 page", "profile_label": "Profile", "skills_label": "Core skills",
         "experience_label": "Experience", "earlier_label": "Earlier experience",
         "education_label": "Education & training", "links_label": "Links",
@@ -32,7 +32,7 @@ LABELS = {
     },
     "ru": {
         "skip_label": "Перейти к резюме", "language_label": "Язык", "contact_label": "Контакты",
-        "download_label": "Скачать резюме", "alternate_download_label": "PDF на английском",
+        "download_label": "Скачать резюме",
         "page_label": "1 страница", "profile_label": "О себе", "skills_label": "Ключевые навыки",
         "experience_label": "Опыт работы", "earlier_label": "Предыдущий опыт",
         "education_label": "Образование и курсы", "links_label": "Ссылки",
@@ -46,13 +46,12 @@ def build_html(data, lang):
     fields = {key: e(value) for key, value in data.items() if isinstance(value, str)}
     fields.update({key: e(value) for key, value in data["education"].items()})
     fields.update({key: e(value) for key, value in LABELS[lang].items()})
-    other = "ru" if lang == "en" else "en"
     fields.update({
         "lang": lang,
         "description": e(data["summary"]),
         "canonical": "https://zemamba.github.io/ru/" if lang == "ru" else "https://zemamba.github.io/",
         "asset_prefix": "../assets/" if lang == "ru" else "assets/",
-        "pdf_name": PDF_NAMES[lang], "other_pdf_name": PDF_NAMES[other], "other_lang": other,
+        "pdf_name": PDF_NAMES[lang],
         "en_current": 'aria-current="page"' if lang == "en" else "",
         "ru_current": 'aria-current="page"' if lang == "ru" else "",
     })

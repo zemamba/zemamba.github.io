@@ -2,8 +2,8 @@
 
 Minimal, responsive bilingual resume website at https://zemamba.github.io/.
 GitHub Pages publishes the repository root from `main`.
-The English page is at `/`; the Russian page is at `/ru/`. Both pages link to
-both downloadable PDFs.
+The English page is at `/`; the Russian page is at `/ru/`. Each page offers
+the PDF in its own language.
 
 ## Update the resume
 
